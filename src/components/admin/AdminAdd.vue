@@ -87,6 +87,12 @@
                         let msg=response.data;
                         if (msg.code === 0) {
                             this.roles = msg.data;
+                            for(let i=0;i<this.roles.length;i++){//遍历角色集合
+                                let role=this.roles[i];
+                                if(role.defaultRole==true){//如果是默认角色
+                                    this.adminForm.roleIds.push(role.id);//让复选框开始就选择默认角色
+                                }
+                            }
                         }else{
                             this.$message.error(msg.msg);
                         }

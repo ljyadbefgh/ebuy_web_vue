@@ -20,6 +20,7 @@
       <!--右侧主界面-->
       <el-container>
         <el-header style="text-align: right; font-size: 12px">
+          <!--导航条-->
           <el-dropdown @command="handleCommand">
             <el-button type="primary">
               {{$store.getters.admin}}<i class="el-icon-arrow-down el-icon--right"></i>

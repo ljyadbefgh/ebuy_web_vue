@@ -44,8 +44,10 @@
           stripe
           border
           style="width: 100%">
-          <el-table-column type="selection" width="40" style="text-align: center;">
+          <el-table-column type="selection" width="40" align="center">
           </el-table-column>
+        <!--  <el-table-column type="index" width="60" label="序号" align="center">
+          </el-table-column>-->
           <el-table-column
             prop="username"
             label="账户名">
@@ -93,7 +95,7 @@
             label="操作"
             width="250">
             <template slot-scope="scope">
-              <el-button @click="handleClick(scope.row)" type="primary" plain size="mini" icon="el-icon-user">角色分配</el-button>
+              <el-button @click="manageRoles(scope.row)" type="primary" plain size="mini" icon="el-icon-user">角色分配</el-button>
               <el-button  @click="editAdmin(scope.row.id)" type="primary" plain  size="mini" icon="el-icon-edit">编辑</el-button>
             </template>
           </el-table-column>
@@ -126,6 +128,10 @@
       ref="adminEditForm"
       @adminTableRefresh="getAdminList"
     />
+    <AdminRoleRelationManage
+      ref="AdminRoleRelationManage"
+      @adminTableRefresh="getAdminList"
+    />
   </div>
 </template>
 
@@ -134,7 +140,8 @@
         name: 'AdminManage',
         components: {
             AdminAdd: () => import("@/components/admin/AdminAdd.vue"),//引入管理员添加表单
-            AdminEdit: () => import("@/components/admin/AdminEdit.vue")//引入管理员编辑表单
+            AdminEdit: () => import("@/components/admin/AdminEdit.vue"),//引入管理员编辑表单
+            AdminRoleRelationManage: () => import("@/components/admin/AdminRoleRelationManage.vue")//引入管理员角色管理列表
         },
         data() {
             return {
@@ -300,8 +307,11 @@
                     });
                 }
             },
-            editAdmin(id){//点击产品编辑按钮时出发，编辑相应的账户信息，id为账户的id
+            editAdmin(id){//点击编辑按钮时出发，编辑相应的账户信息，id为账户的id
                 this.$refs.adminEditForm.openDialog(id);//打开账户编辑窗口
+            },
+            manageRoles(row){
+                this.$refs.AdminRoleRelationManage.openDialog(row.id,row.username);//打开角色关系管理窗口
             }
         },
         mounted() {
