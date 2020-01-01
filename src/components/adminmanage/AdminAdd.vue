@@ -21,9 +21,9 @@
           <el-option value="2" label="女"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="角色" style="text-align: left;" prop="roleIds">
-        <el-checkbox-group v-model="adminForm.roleIds" >
-          <el-checkbox v-for="role in roles" :label="role.id" :key="role.nameZH" name="roleIds">{{role.nameZH}}</el-checkbox>
+      <el-form-item label="角色" align="left" prop="roleIds">
+        <el-checkbox-group v-model="adminForm.roleIds">
+          <el-checkbox v-for="role in roles" :label="role.id" :key="role.nameZH"  name="roleIds">{{role.nameZH}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
     </el-form>

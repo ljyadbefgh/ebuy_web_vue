@@ -132,6 +132,11 @@
       ref="AdminRoleRelationManage"
       @adminTableRefresh="getAdminList"
     />
+    <AdminAddRolesToAdmins
+      ref="AdminAddRolesToAdmins"
+      @adminTableRefresh="getAdminList"
+      :adminRows="this.multipleSelection"
+    />
   </div>
 </template>
 
@@ -139,9 +144,10 @@
     export default {
         name: 'AdminManage',
         components: {
-            AdminAdd: () => import("@/components/admin/AdminAdd.vue"),//引入管理员添加表单
-            AdminEdit: () => import("@/components/admin/AdminEdit.vue"),//引入管理员编辑表单
-            AdminRoleRelationManage: () => import("@/components/admin/AdminRoleRelationManage.vue")//引入管理员角色管理列表
+            AdminAdd: () => import("@/components/adminmanage/AdminAdd.vue"),//引入管理员添加表单
+            AdminEdit: () => import("@/components/adminmanage/AdminEdit.vue"),//引入管理员编辑表单
+            AdminRoleRelationManage: () => import("@/components/adminmanage/AdminRoleRelationManage.vue"),//引入管理员角色管理列表
+            AdminAddRolesToAdmins: () => import("@/components/adminmanage/AdminAddRolesToAdmins.vue")//引入批量将角色赋予多个管理员的组件
         },
         data() {
             return {
@@ -263,6 +269,8 @@
                     this.handleDelete();
                 }else if(command=="add"){
                     this.$refs.adminAddForm.openDialog();
+                }else if(command=="addRolesFordmin"){
+                    this.addRolesFordmin();
                 }else{
                     this.$message('click on item ' + command);
                 }
@@ -306,6 +314,12 @@
                         //console.error(error);
                     });
                 }
+            },
+            addRolesFordmin(){//处理批量添加角色给多个账户的请求
+                if(this.checkSelection()){//选择了记录才打开窗口
+                    this.$refs.AdminAddRolesToAdmins.openDialog();
+                }
+                //this.$refs.adminEditForm.openDialog(id);//打开账户编辑窗口
             },
             editAdmin(id){//点击编辑按钮时出发，编辑相应的账户信息，id为账户的id
                 this.$refs.adminEditForm.openDialog(id);//打开账户编辑窗口

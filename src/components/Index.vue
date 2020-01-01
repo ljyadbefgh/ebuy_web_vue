@@ -27,6 +27,8 @@
             </el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item  command="admin_detail">个人资料</el-dropdown-item>
+              <el-dropdown-item  command="admin_detail">基本信息编辑</el-dropdown-item>
+              <el-dropdown-item  command="admin_detail">密码修改</el-dropdown-item>
               <el-dropdown-item command="admin_logout" divided>退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
