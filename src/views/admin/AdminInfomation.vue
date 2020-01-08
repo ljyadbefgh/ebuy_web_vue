@@ -1,6 +1,5 @@
 <template>
   <div class="index">
-
     <el-card class="box-card" style="text-align:left;">
       <div slot="header" class="clearfix">
         <span>默认后台管理页面首页-账户信息</span>
@@ -47,7 +46,7 @@
 
 <script>
     export default {
-        name: 'Main',
+        name: 'AdminInfomation',
         data() {
             return {
                 admin:''

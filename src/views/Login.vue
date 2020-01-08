@@ -1,7 +1,7 @@
 <template>
     <div>
-      <el-divider content-position="left">订餐系统后台登陆界面</el-divider>
-      <el-form :model="loginForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form :model="loginForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="login-container" label-position="left">
+        <h3 class="login_title">订餐系统后台登陆</h3>
         <el-form-item label="账户名" prop="username">
           <el-input type="username" v-model="loginForm.username" autocomplete="off"></el-input>
         </el-form-item>
@@ -10,7 +10,6 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">登陆</el-button>
-          <el-button @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -82,5 +81,24 @@
 </script>
 
 <style scoped>
-
+  /*设置表单样式*/
+  .login-container {
+    border-radius: 15px;
+    background-clip: padding-box;/*背景绘制在衬距方框内（剪切成衬距方框）。*/
+    margin: 180px auto;/*让登陆界面居中*/
+    width: 350px;
+    padding: 35px 35px 15px 35px;
+    background: #fff;
+    border: 1px solid #eaeaea;
+    box-shadow: 0 0 25px #cac6c6;
+  }
+  .login_title {
+    margin: 0px auto 40px auto;
+    text-align: center;
+    color: #505458;
+  }
+  .login_remember {
+    margin: 0px 0px 35px 0px;
+    text-align: left;
+  }
 </style>

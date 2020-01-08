@@ -18,7 +18,7 @@
           <el-option key="2" value="2" label="女"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="角色" style="text-align: left;" prop="roleIds">
+      <el-form-item label="角色" align="left" prop="roleIds">
         <el-checkbox-group v-model="adminForm.roleIds" >
           <el-checkbox v-for="role in roles" :label="role.id" :key="role.nameZH" name="roleIds">{{role.nameZH}}</el-checkbox>
         </el-checkbox-group>
@@ -35,9 +35,14 @@
     export default {
         name: "AdminEdit",
         // 接受父组件的值
-        /*props: {
-            id: String
-        },*/
+        props:{
+            roles: {///取从父组件传递过来的所有角色信息集合。注意，这里引用的是地址，如果修改会影响父组件。例如this.adminRows.length=0清空数组后，父组件选择的数据也将被清空。如果不想更改可以配合watch或computed来重新赋值，实现复制值而非地址来传递。
+                type: Array,
+                default () {
+                    return [];
+                }
+            }
+        },
         data() {
             return {
                 id:'',//接收传递过来的id的值
@@ -46,7 +51,6 @@
                 adminForm:{
                     roleIds:[]//必须要先初始化，否则界面打开时虽然会正常显示但控制台会打印错误信息。原因是该组件打开时会首先根据roleIds初始化复选框已勾选的值，如果该属性不存在会打印错误；但随后通过远程访问会重新创建该属性并赋值，因此依旧能正常显示。
                 },
-                roles:[],//从服务端获取的所有角色信息
                 rules: {
                     username: [
                         { required: true, message: '不能为空', trigger: 'blur' },
@@ -106,18 +110,6 @@
             closeDailogClean() {//Dialog 关闭动画结束时的回调。这里是在关闭窗口时清空窗口的编辑信息
                 this.$refs["adminForm"].resetFields();//重置表单，以免下次打开时还存在，导致让客户看到值变化的过程
             },
-            initRole(){//初始化角色列表
-                this.$axios
-                    .get("/api/backstage/rolemanage/all")
-                    .then(response => {//获取返回数据
-                        let msg=response.data;
-                        if (msg.code === 0) {
-                            this.roles = msg.data;
-                        }else{
-                            this.$message.error(msg.msg);
-                        }
-                    })
-            },
             submitForm(formName) {//提交表单事件
                 this.$refs[formName].validate((valid) => {
                     if (valid) {//如果验证通过
@@ -144,9 +136,6 @@
                     }
                 });
             },
-        },
-        mounted() {
-            this.initRole();
         }
     }
 </script>

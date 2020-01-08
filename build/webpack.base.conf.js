@@ -64,6 +64,10 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
+      },
+      {/*scss配置，需要手动配置，20200103由ljy加上*/
+        test: /\.scss$/,
+        loaders: ['style', 'css', 'sass']
       }
     ]
   },

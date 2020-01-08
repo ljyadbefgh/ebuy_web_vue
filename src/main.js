@@ -19,6 +19,8 @@ axios.defaults.headers ={
 // 所以如果使用proxyTable代理要注意这个问题，虚拟目录必须和服务端项目的地址一致
 axios.defaults.withCredentials=true;  // 跨域携带cookie
 
+// import './styles/index.scss'
+
 //挂在在vue的原型上
 Vue.prototype.$axios = axios;
 

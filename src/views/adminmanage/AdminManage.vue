@@ -1,22 +1,6 @@
 <template>
   <div>
-    <el-card class="box-card" style="text-align:left;">
-      <div slot="header" class="clearfix">
-        <span>管理账户列表</span>
-        <div style="float: right; " >
-          <el-button type="text">操作方式：</el-button>
-          <el-dropdown @command="handleOperator" trigger="click">
-            <el-button type="primary">
-              菜单<i class="el-icon-arrow-down el-icon--right"></i>
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-<!--              :key="index"无意义，只是不加上去会控制台报错（但不影响运行）故此加上-->
-              <el-dropdown-item v-for="(item,index) in operatorOptions" :command="item.value" :key="index">{{item.label}}</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-      </div>
-      <div class="text item">
+      <div class="item">
         <!--搜索栏-->
         <el-form :model="adminQuery"  :inline="true" style="text-align: left;" class="demo-form-inline">
           <el-form-item label="账户名" >
@@ -37,6 +21,13 @@
             <el-button type="primary" @click="search">查询</el-button>
           </el-form-item>
         </el-form>
+      </div>
+      <div class="item" align="left" style="margin-bottom: 5px;">
+          <el-button @click="$refs.adminAddForm.openDialog()" type="primary" plain size="mini">添加</el-button>
+          <el-button @click="handleDelete" type="primary" plain size="mini" :disabled="disabled">删除</el-button>
+          <el-button @click="batchOperatorRoles" type="primary" plain size="mini" :disabled="disabled">角色批量分配</el-button>
+      </div>
+      <div class="item">
         <!-- 表格插件-->
         <el-table
           @selection-change="handleSelectionChange"
@@ -100,6 +91,8 @@
             </template>
           </el-table-column>
         </el-table>
+      </div>
+        <div class="text item">
         <!-- 分页插件-->
         <div class="block">
           <el-pagination
@@ -116,26 +109,28 @@
           </el-pagination>
         </div>
       </div>
-    </el-card>
     <!-- 管理员添加表单 -->
     <!--自定义方法（刷新表格数据）：@adminTableRefresh="getAdminList" ，用于将adminTableRefresh方法提供给子组件调用，子组件调用方法：this.$emit("adminTableRefresh")-->
     <!-- ref="adminAddForm",通过这个可以调用子组件相应的方法或属性 -->
     <AdminAdd
       ref="adminAddForm"
       @adminTableRefresh="getAdminList"
+      :roles="this.roles"
     />
     <AdminEdit
       ref="adminEditForm"
       @adminTableRefresh="getAdminList"
+      :roles="this.roles"
     />
     <AdminRoleRelationManage
       ref="AdminRoleRelationManage"
       @adminTableRefresh="getAdminList"
     />
-    <AdminAddRolesToAdmins
-      ref="AdminAddRolesToAdmins"
+    <AdminRoleBatchOperation
+      ref="AdminRoleBatchOperation"
       @adminTableRefresh="getAdminList"
       :adminRows="this.multipleSelection"
+      :roles="this.roles"
     />
   </div>
 </template>
@@ -144,13 +139,14 @@
     export default {
         name: 'AdminManage',
         components: {
-            AdminAdd: () => import("@/components/adminmanage/AdminAdd.vue"),//引入管理员添加表单
-            AdminEdit: () => import("@/components/adminmanage/AdminEdit.vue"),//引入管理员编辑表单
-            AdminRoleRelationManage: () => import("@/components/adminmanage/AdminRoleRelationManage.vue"),//引入管理员角色管理列表
-            AdminAddRolesToAdmins: () => import("@/components/adminmanage/AdminAddRolesToAdmins.vue")//引入批量将角色赋予多个管理员的组件
+            AdminAdd: () => import("@/views/adminmanage/AdminAdd.vue"),//引入管理员添加表单
+            AdminEdit: () => import("@/views/adminmanage/AdminEdit.vue"),//引入管理员编辑表单
+            AdminRoleRelationManage: () => import("@/views/adminmanage/AdminRoleRelationManage.vue"),//引入管理员角色管理列表
+            AdminRoleBatchOperation: () => import("@/views/adminmanage/AdminRoleBatchOperation.vue")//引入批量将角色赋予多个管理员的组件
         },
         data() {
             return {
+                disabled:true,//用于批量删除和批量角色分配按钮的可用性属性，只有当选择了复选框时才可以操作
                 tableData: [],//表格记录
                 // 分页-传递到服务端的数值
                 limit: 10,//每页的最大记录数
@@ -171,11 +167,8 @@
                     value: 'remove',
                     label: '批量删除管理账户'
                 }, {
-                    value: 'addRolesFordmin',
-                    label: '批量赋予角色'
-                }, {
-                    value: 'removeRolesFromAdmin',
-                    label: '批量移除角色'
+                    value: 'batchOperatorRoles',
+                    label: '批量赋予/取消角色'
                 }],
                 multipleSelection:[]//复选框选择的记录row
             }
@@ -264,19 +257,13 @@
                         row.unLocked=!callback;//让开关状态回到修改前
                     });
             },
-            handleOperator(command) {//点击更多菜单时的触发事件
-                if(command=="remove"){
-                    this.handleDelete();
-                }else if(command=="add"){
-                    this.$refs.adminAddForm.openDialog();
-                }else if(command=="addRolesFordmin"){
-                    this.addRolesFordmin();
-                }else{
-                    this.$message('click on item ' + command);
-                }
-            },
             handleSelectionChange(value){//当选择项发生变化时会触发该事件，这里用于获取选择的记录（多选）.value可以获取所有选择了的行记录row
                 this.multipleSelection=value;
+                if(this.multipleSelection.length>0){//如果选择了记录
+                    this.disabled=false;
+                }else{//如果没有选择记录
+                    this.disabled=true;
+                }
             },
             checkSelection() {//判断是否选择了数据，用于批量操作前的验证
                 if (this.multipleSelection && this.multipleSelection.length) {
@@ -315,11 +302,10 @@
                     });
                 }
             },
-            addRolesFordmin(){//处理批量添加角色给多个账户的请求
+            batchOperatorRoles(){//处理批量添加角色给多个账户的请求
                 if(this.checkSelection()){//选择了记录才打开窗口
-                    this.$refs.AdminAddRolesToAdmins.openDialog();
+                    this.$refs.AdminRoleBatchOperation.openDialog();//打开相应窗口
                 }
-                //this.$refs.adminEditForm.openDialog(id);//打开账户编辑窗口
             },
             editAdmin(id){//点击编辑按钮时出发，编辑相应的账户信息，id为账户的id
                 this.$refs.adminEditForm.openDialog(id);//打开账户编辑窗口
@@ -337,23 +323,5 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .text {
-    font-size: 14px;
-  }
-
-  .item {
-    margin-bottom: 18px;
-  }
-
-  .clearfix:before,
-  .clearfix:after {
-    display: table;
-    content: "";
-  }
-
-  .clearfix:after {
-    clear: both
-  }
-
 
 </style>

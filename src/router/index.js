@@ -1,15 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 // import Login from "../components/Login";
 // import Index from "../components/Index";
 
 //异步加载引入
-const Login = () => import("@/components/Login")
-const Index = () => import("@/components/Index")
-const AdminManage = () => import("@/components/adminmanage/AdminManage")
-const AdminInfomation = () => import("@/components/admin/AdminInfomation")
-const PurviewList = () => import("@/components/PurviewList")
+const Login = () => import("@/views/Login")
+const Index = () => import("@/views/Index")
+const AdminManage = () => import("@/views/adminmanage/AdminManage")//导入管理员管理组件
+const AdminInfomation = () => import("@/views/admin/AdminInfomation")//导入管理员详细信息组件
+const MenuManage = () => import("@/views/menumanage/MenuManage")//导入菜单管理组件
 
 Vue.use(Router)
 
@@ -37,8 +36,8 @@ export default new Router({
           component: AdminManage
         },
         {
-          path: 'PurviewList',
-          component: PurviewList
+          path: 'MenuManage',
+          component: MenuManage
         }
       ]
     }

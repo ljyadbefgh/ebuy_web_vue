@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="管理员创建" :visible.sync="dialogFormVisible" width="500px" >
+  <el-dialog title="管理员创建" :visible.sync="dialogFormVisible" width="500px" @opened="opened" >
     <!--下面这个可以替换原始的dialog的标题样式-->  
    <!-- <div slot="title" class="header-title">
        <span>管理员创建</span>
@@ -37,6 +37,14 @@
 <script>
     export default {
         name: "AdminAdd",
+        props:{
+            roles: {///取从父组件传递过来的所有角色信息集合。注意，这里引用的是地址，如果修改会影响父组件。例如this.adminRows.length=0清空数组后，父组件选择的数据也将被清空。如果不想更改可以配合watch或computed来重新赋值，实现复制值而非地址来传递。
+                type: Array,
+                default () {
+                    return [];
+                }
+            }
+        },
         data() {
             return {
                 dialogFormVisible: false,
@@ -47,7 +55,6 @@
                     sex:'',
                     roleIds:[]//已经选择的角色复选框的id集合，后端需要
                 },
-                roles:[],//从服务端获取的所有角色信息
                 rules: {
                     username: [
                         { required: true, message: '不能为空', trigger: 'blur' },
@@ -80,23 +87,13 @@
             closeDialog() {//关闭对话框
                 this.dialogFormVisible = false;
             },
-            initRole(){//初始化角色列表
-                this.$axios
-                    .get("/api/backstage/rolemanage/all")
-                    .then(response => {//获取返回数据
-                        let msg=response.data;
-                        if (msg.code === 0) {
-                            this.roles = msg.data;
-                            for(let i=0;i<this.roles.length;i++){//遍历角色集合
-                                let role=this.roles[i];
-                                if(role.defaultRole==true){//如果是默认角色
-                                    this.adminForm.roleIds.push(role.id);//让复选框开始就选择默认角色
-                                }
-                            }
-                        }else{
-                            this.$message.error(msg.msg);
-                        }
-                    })
+            opened(){//Dialog 打开动画结束时的回调
+                for(let i=0;i<this.roles.length;i++){//遍历角色集合
+                    let role=this.roles[i];
+                    if(role.defaultRole==true){//如果是默认角色
+                        this.adminForm.roleIds.push(role.id);//让复选框开始就选择默认角色
+                    }
+                }
             },
             submitForm(formName) {//提交表单事件
                 this.$refs[formName].validate((valid) => {
@@ -126,7 +123,7 @@
             },
         },
         mounted() {
-            this.initRole();
+
         }
     }
 </script>
