@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Login from "../components/Login";
-// import Index from "../components/Index";
 
 //异步加载引入
 const Login = () => import("@/views/Login")
@@ -38,6 +36,10 @@ export default new Router({
         {
           path: 'MenuManage',
           component: MenuManage
+        },
+        {
+          path: 'RoleManage',
+          component: () => import("@/views/rolemanage/RoleManage")
         }
       ]
     }

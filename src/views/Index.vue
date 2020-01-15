@@ -11,6 +11,7 @@
           <el-submenu index="1">
             <template slot="title"><i class="el-icon-user-solid"></i>管理员模块</template>
             <el-menu-item index="1-1" route="/admin/MenuManage">菜单管理</el-menu-item>
+            <el-menu-item index="1-1" route="/admin/RoleManage">角色管理</el-menu-item>
             <el-menu-item index="1-2" route="/admin/AdminManage">管理员管理</el-menu-item>
           </el-submenu>
           <el-submenu index="2">

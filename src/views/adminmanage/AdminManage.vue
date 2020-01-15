@@ -23,9 +23,9 @@
         </el-form>
       </div>
       <div class="item" align="left" style="margin-bottom: 5px;">
-          <el-button @click="$refs.adminAddForm.openDialog()" type="primary" plain size="mini">添加</el-button>
-          <el-button @click="handleDelete" type="primary" plain size="mini" :disabled="disabled">删除</el-button>
-          <el-button @click="batchOperatorRoles" type="primary" plain size="mini" :disabled="disabled">角色批量分配</el-button>
+          <el-button @click="$refs.adminAddForm.openDialog()" type="primary"  size="mini">添加</el-button>
+          <el-button @click="handleDelete" type="primary"  size="mini" :disabled="disabled">删除</el-button>
+          <el-button @click="batchOperatorRoles" type="primary"  size="mini" :disabled="disabled">角色批量分配</el-button>
       </div>
       <div class="item">
         <!-- 表格插件-->
@@ -58,8 +58,12 @@
             label="角色数量">
           </el-table-column>
           <el-table-column
+            prop="menuNumber"
+            label="菜单数量">
+          </el-table-column>
+          <el-table-column
             prop="saveProductNumber"
-            label="发布产品数量">
+            label="发布产品数">
           </el-table-column>
           <el-table-column
             prop="createTime"
@@ -84,10 +88,12 @@
           <el-table-column
             fixed="right"
             label="操作"
-            width="250">
+            align="center"
+            width="330">
             <template slot-scope="scope">
-              <el-button @click="manageRoles(scope.row)" type="primary" plain size="mini" icon="el-icon-user">角色分配</el-button>
               <el-button  @click="editAdmin(scope.row.id)" type="primary" plain  size="mini" icon="el-icon-edit">编辑</el-button>
+              <el-button @click="manageRoles(scope.row)" type="primary" plain size="mini" icon="el-icon-user">角色分配</el-button>
+              <el-button @click="readMenus(scope.row)" type="primary" plain size="mini" icon="el-icon-user">菜单预览</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -117,20 +123,27 @@
       @adminTableRefresh="getAdminList"
       :roles="this.roles"
     />
+    <!-- 管理员编辑表单 -->
     <AdminEdit
       ref="adminEditForm"
       @adminTableRefresh="getAdminList"
       :roles="this.roles"
     />
+    <!-- 管理员角色关系管理表单 -->
     <AdminRoleRelationManage
       ref="AdminRoleRelationManage"
       @adminTableRefresh="getAdminList"
     />
+    <!-- 管理员角色批量添加/移除关系管理表单 -->
     <AdminRoleBatchOperation
       ref="AdminRoleBatchOperation"
       @adminTableRefresh="getAdminList"
       :adminRows="this.multipleSelection"
       :roles="this.roles"
+    />
+    <!-- 管理员角色批量添加/移除关系管理表单 -->
+    <AdminMenuManage
+      ref="adminMenuManage"
     />
   </div>
 </template>
@@ -142,7 +155,8 @@
             AdminAdd: () => import("@/views/adminmanage/AdminAdd.vue"),//引入管理员添加表单
             AdminEdit: () => import("@/views/adminmanage/AdminEdit.vue"),//引入管理员编辑表单
             AdminRoleRelationManage: () => import("@/views/adminmanage/AdminRoleRelationManage.vue"),//引入管理员角色管理列表
-            AdminRoleBatchOperation: () => import("@/views/adminmanage/AdminRoleBatchOperation.vue")//引入批量将角色赋予多个管理员的组件
+            AdminRoleBatchOperation: () => import("@/views/adminmanage/AdminRoleBatchOperation.vue"),//引入批量将角色赋予多个管理员的组件
+            AdminMenuManage:() => import("@/views/adminmanage/AdminMenuManage.vue")
         },
         data() {
             return {
@@ -312,6 +326,9 @@
             },
             manageRoles(row){
                 this.$refs.AdminRoleRelationManage.openDialog(row.id,row.username);//打开角色关系管理窗口
+            },
+            readMenus(row){//打开菜单预览
+                this.$refs.adminMenuManage.openDialog(row.id);//打开菜单预览管理窗口
             }
         },
         mounted() {

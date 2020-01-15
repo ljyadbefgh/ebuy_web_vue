@@ -7,6 +7,9 @@ import router from './router'
 //导入element ui插件
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+// Vue.use(ElementUI);
+//对element ui全局样式做改变，目前支持两个字段size用于改变组件的所有支持sezi组件的默认尺寸,设置弹框的初始 z-index（默认值：2000）
+Vue.use(ElementUI, { size: 'mini', zIndex: 3000 });
 
 //引入axios
 import axios from "axios"
@@ -25,15 +28,18 @@ axios.defaults.withCredentials=true;  // 跨域携带cookie
 Vue.prototype.$axios = axios;
 
 
-
-
-
-
 import store from "./vuex/store";
 
-Vue.use(ElementUI);
+
+
 
 Vue.config.productionTip = false
+
+// 调用自定义的公共函数
+import myMethod from './api/my/my_common_methods'
+Vue.prototype.myMethod=myMethod;// 组件中通过this.myCommon.method()调用
+
+
 
 /* eslint-disable no-new */
 new Vue({
