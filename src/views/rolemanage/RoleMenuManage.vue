@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="菜单管理" :visible.sync="dialogFormVisible" width="500px" @opened="opened" @closed="closed" align="left">
+  <el-dialog title="菜单管理" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="500px" @opened="opened" @closed="closed" align="left">
     <el-checkbox v-model="checkAll" @change="handleCheckAllChange" >全选</el-checkbox>
     <el-tree
       ref="menuTree"
@@ -75,7 +75,7 @@
                 let _this=this;
                 if (this.checkAll) {//如果全选
                     this.checkStrictly=false;//先取消严格模式，让父菜单和菜单关联
-                    setTimeout(function(){//设定顺序，让父菜单所有一级目录选择，通过关联（this.checkStrictly=false），实现所有菜单自选
+                    setTimeout(function(){//设定顺序（这里没有用远程交互去异步处理，故可以采用该方法。否则建议用promise实现），让父菜单所有一级目录选择，通过关联（this.checkStrictly=false），实现所有菜单自选
                         _this.$refs.menuTree.setCheckedNodes(_this.menus);
                     }, 0);
                     setTimeout(function(){//父菜单执行完后，再实现严格模式
@@ -100,7 +100,7 @@
                                 message: msg.msg
                             });
                             this.closeDialog();//关闭对话框
-                            this.$emit("menuTableRefresh");//刷新父组件的表格
+                            this.$emit("roleTableRefresh");//刷新父组件的表格
                         }else{//如果修改失败
                             this.$message.error(msg.msg);
                         }

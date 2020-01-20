@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="item" align="left" style="margin-bottom: 5px;">
-      <el-button @click="$refs.roleAddForm.openDialog()" type="primary"  size="mini">添加</el-button>
+      <el-button @click="$refs.purviewAddForm.openDialog()" type="primary"  size="mini">添加</el-button>
       <el-button @click="handleDelete" type="primary"  size="mini" :disabled="disabled">删除</el-button>
     </div>
     <div class="item">
@@ -17,24 +17,12 @@
         <!--  <el-table-column type="index" width="60" label="序号" align="center">
           </el-table-column>-->
         <el-table-column
-          prop="nameZH"
-          label="中文名">
-        </el-table-column>
-        <el-table-column
           prop="name"
-          label="英文名">
+          label="权限名">
         </el-table-column>
         <el-table-column
-          prop="level"
-          label="级别">
-        </el-table-column>
-        <el-table-column
-          prop="defaultRole"
-          label="默认角色">
-          <template slot-scope="scope">
-            <el-tag size="medium" v-if="scope.row.defaultRole==true" type="success">是</el-tag>
-            <el-tag size="medium" v-if="scope.row.defaultRole==false" type="info">否</el-tag>
-          </template>
+          prop="url"
+          label="路径">
         </el-table-column>
         <el-table-column
           prop="enabled"
@@ -45,31 +33,24 @@
           </template>
         </el-table-column>
         <el-table-column
-          :show-overflow-tooltip="true"
+          prop="orderNum"
+          label="优先级">
+        </el-table-column>
+        <el-table-column
+          prop="roleNumber"
+          label="角色数">
+        </el-table-column>
+        <el-table-column
           prop="description"
-          label="角色描述">
-        </el-table-column>
-        <el-table-column
-          prop="adminNumber"
-          label="账户数">
-        </el-table-column>
-        <el-table-column
-          prop="purviewNumber"
-          label="权限数">
-        </el-table-column>
-        <el-table-column
-          prop="menuNumber"
-          label="菜单数">
+          label="描述">
         </el-table-column>
         <el-table-column
           fixed="right"
           label="操作"
           align="center"
-          width="350">
+          width="150">
           <template slot-scope="scope">
-            <el-button  @click="editRole(scope.row.id)" type="primary" plain  icon="el-icon-edit">编辑</el-button>
-            <el-button @click="menuManage(scope.row.id)" type="primary" plain  icon="el-icon-user">菜单分配</el-button>
-            <el-button @click="purviewManage(scope.row.id)" type="primary" plain  icon="el-icon-user">权限分配</el-button>
+            <el-button  @click="editPurview(scope.row.id)" type="primary" plain  icon="el-icon-edit">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -92,38 +73,25 @@
       </div>
     </div>
 
-
-    <!-- 角色添加表单 -->
-    <RoleAdd
-      ref="roleAddForm"
-      @roleTableRefresh="getRoles"
+    <!-- 权限添加表单 -->
+    <PurviewAdd
+      ref="purviewAddForm"
+      @purviewTableRefresh="getPurviews"
     />
-    <!-- 角色编辑表单 -->
-    <RoleEdit
-      ref="roleEditForm"
-      @roleTableRefresh="getRoles"
-    />
-    <!-- 角色菜单管理表单 -->
-    <RoleMenuManage
-      ref="roleMenuManageForm"
-      @roleTableRefresh="getRoles"
-    />
-    <!-- 角色权限管理表单 -->
-    <RolePurviewManage
-      ref="rolePurviewManageForm"
-      @roleTableRefresh="getRoles"
+    <!-- 权限编辑表单 -->
+    <PurviewEdit
+      ref="purviewEditForm"
+      @purviewTableRefresh="getPurviews"
     />
   </div>
 </template>
 
 <script>
     export default {
-        name: "RoleManage",
+        name: "PurviewManage",
         components: {
-            RoleAdd: () => import("@/views/rolemanage/RoleAdd.vue"),//引入角色添加表单
-            RoleEdit: () => import("@/views/rolemanage/RoleEdit.vue"),//引入角色编辑表单
-            RoleMenuManage: () => import("@/views/rolemanage/RoleMenuManage.vue"),//引入角色菜单管理表单
-            RolePurviewManage: () => import("@/views/rolemanage/RolePurviewManage.vue")//引入角色权限管理表单
+            PurviewAdd: () => import("@/views/purviewmanage/PurviewAdd.vue"),//引入权限添加表单
+            PurviewEdit: () => import("@/views/purviewmanage/PurviewEdit.vue")//引入权限添加表单
         },
         data() {
             return {
@@ -140,21 +108,21 @@
                 multipleSelection:[]//复选框选择的记录row
             }
         },
-        methods:{
-            getRoles() {//从服务端读取角色列表
+        methods: {
+            getPurviews() {//从服务端读取角色列表
                 this.$axios
-                    .get("/api/backstage/rolemanage",{
+                    .get("/api/backstage/purviewmanage", {
                         params: {
                             page: this.table.page,
                             limit: this.table.limit,
                         }
                     })
                     .then(response => {//获取返回数据
-                        let msg=response.data;
+                        let msg = response.data;
                         if (msg.code === 0) {
                             this.table.tableData = msg.data;
-                            this.table.total=msg.count;
-                        }else{
+                            this.table.total = msg.count;
+                        } else {
                             this.$message.error(msg.msg);
                         }
                     })
@@ -164,11 +132,18 @@
             },
             handleCurrentChange(value) {//当分页插件的页码改变时触发，value表示前端分页点击的页码
                 this.table.page = value;
-                this.getRoles();
+                this.getPurviews();
             },
             handleSizeChange(value) {//当分页插件的每页显示数量改变时触发，value表示每页的分页数量
                 this.table.limit = value;
-                this.getRoles();
+                this.getPurviews();
+            },
+            checkSelection() {//判断是否选择了数据，用于批量操作前的验证
+                if (this.multipleSelection.length>0) {
+                    return true
+                } else {
+                    this.$message.error('请先选择数据')
+                }
             },
             handleSelectionChange(value){//当选择项发生变化时会触发该事件，这里用于获取选择的记录（多选）.value可以获取所有选择了的行记录row
                 this.multipleSelection=value;
@@ -178,31 +153,24 @@
                     this.disabled=true;
                 }
             },
-            checkSelection() {//判断是否选择了数据，用于批量操作前的验证
-                if (this.multipleSelection.length>0) {
-                    return true
-                } else {
-                    this.$message.error('请先选择数据')
-                }
-            },
-            handleDelete(){//批量删除管理账户
+            handleDelete(){//批量删除权限
                 if(this.checkSelection()){
                     let count=this.multipleSelection.length;
-                    this.$confirm(" 确定要批量删除这"+count+"个角色吗？", "系统提示", {
+                    this.$confirm(" 确定要批量删除这"+count+"个权限吗？", "系统提示", {
                         confirmButtonText: "确定",//确定按钮的文本内容
                         cancelButtonText: "取消",//取消按钮的文本内容
                         type: "warning"
                     }).then(() => {//选择确认按钮后执行
-                        var ids = [];//定义要批量删除的主键
+                        let ids = [];//定义要批量删除的主键
                         for (let i = 0; i < this.multipleSelection.length; i++) {
                             ids.push(this.multipleSelection[i].id);
                         }
                         this.$axios
-                            .delete("/api/backstage/rolemanage/"+ids.toString())
+                            .delete("/api/backstage/purviewmanage/"+ids.toString())
                             .then(response => {//获取返回数据
                                 let msg=response.data;
                                 if (msg.code === 0) {
-                                    this.getRoles();// 刷新表格数据
+                                    this.getPurviews();// 刷新表格数据
                                 }else{
                                     this.$message.error(msg.msg);
                                 }
@@ -215,18 +183,12 @@
                     });
                 }
             },
-            editRole(id){
-                this.$refs.roleEditForm.openDialog(id);
-            },
-            menuManage(id){
-                this.$refs.roleMenuManageForm.openDialog(id);
-            },
-            purviewManage(id){
-                this.$refs.rolePurviewManageForm.openDialog(id);
+            editPurview(id){
+                this.$refs.purviewEditForm.openDialog(id);
             }
         },
         mounted() {
-            this.getRoles();// 获取表格数据
+            this.getPurviews();// 获取表格数据
         }
     }
 </script>

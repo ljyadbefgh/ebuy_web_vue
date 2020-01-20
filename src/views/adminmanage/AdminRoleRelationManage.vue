@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" :visible.sync="dialogFormVisible" align="center"  width="630px" @opened="openDialogChecked" @closed="closeDailogClean">
+  <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="false"  align="center"  width="630px" @opened="openDialogChecked" @closed="closeDailogClean">
     <el-transfer
       align="left"
       v-model="rolesSelect"

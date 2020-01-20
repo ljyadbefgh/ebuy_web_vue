@@ -1,8 +1,20 @@
 <template>
   <div class="index">
     <el-container class="main" style="height: 500px; border: 1px solid #eee">
+        <!-- 左侧菜单 -->
+        <el-aside width="200px" align="left">
+          <el-menu
+                   router
+                   background-color="#304156"
+                   text-color="#fff"
+                   active-text-color="#409eff">
+            <!-- 自定义组件：遍历路由表，生成左侧菜单 -->
+            <side-Meuns :menus="this.menus"></side-Meuns>
+        </el-menu>
+      </el-aside>
+
       <!--左侧导航-->
-      <el-aside width="200px" align="left">
+     <!-- <el-aside width="200px" align="left">
         <el-menu :default-openeds="['1']"
                  router
                  background-color="#304156"
@@ -20,7 +32,7 @@
             <el-menu-item index="2-2">选项2</el-menu-item>
           </el-submenu>
         </el-menu>
-      </el-aside>
+      </el-aside>-->
       <!--右侧主界面-->
       <el-container>
         <!--右侧界面的头部导航条-->
@@ -76,8 +88,12 @@
 <script>
     export default {
         name: "Index",
+        components: {
+            SideMeuns: () => import("@/components/SideMeuns.vue")//引入左侧树形菜单组件
+        },
         data() {
             return {
+                menus:[],
                 activeIndex2: '1'
             }
         },
@@ -94,7 +110,25 @@
             },
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
+            },
+            initMenus(){//获取用户的菜单信息
+                this.$axios.get('/api/backstage/admin/treeMenu')
+                    .then(response=>{
+                        let msg=response.data;//获取返回数据
+                        if(msg.code==0){//如果登陆成功
+                            this.menus=msg.data;
+                        }else{
+                            this.$message.error(msg.msg);
+                        }
+                    })
+                    //获取失败
+                    .catch(error=>{
+                        console.log(error);
+                    });
             }
+        },
+        mounted() {
+            this.initMenus();
         }
     };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="菜单编辑" :visible.sync="dialogFormVisible" width="500px" @opened="opened" @closed="closed">
+  <el-dialog title="菜单编辑" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="500px" @opened="opened" @closed="closed">
     <el-form :model="form" :rules="rules" ref="form" label-width="80px">
       <el-form-item label="上级菜单" prop="menuIdPathArray" align="left">
         <el-cascader
@@ -27,6 +27,9 @@
       <el-divider content-position="center">组件设置</el-divider>
       <el-form-item label="组件名称" prop="component">
         <el-input v-model="form.component"></el-input>
+      </el-form-item>
+      <el-form-item label="组件图片" prop="iconCls" placeholder="请结合前端，填写图片样式名称">
+        <el-input v-model="form.iconCls"></el-input>
       </el-form-item>
       <el-form-item label="路由地址" prop="route">
         <el-input v-model="form.route"></el-input>
@@ -88,6 +91,9 @@
                     ],
                     component: [
                         { max: 20, message: '长度不能超过20个字符', trigger: 'blur' }
+                    ],
+                    iconCls: [
+                        { max: 200, message: '长度不能超过200个字符', trigger: 'blur' }
                     ],
                     route: [
                         { max: 200, message: '长度不能超过200个字符', trigger: 'blur' }

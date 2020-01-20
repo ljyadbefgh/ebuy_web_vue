@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="管理员修改" :visible.sync="dialogFormVisible"  v-loading="loading" width="500px" @opened="openDialogChecked" @closed="closeDailogClean">
+  <el-dialog title="管理员修改" destroy-on-close :close-on-click-modal="false" :visible.sync="dialogFormVisible"  v-loading="loading" width="500px" @opened="openDialogChecked" @closed="closeDailogClean">
     <!--下面这个可以替换原始的dialog的标题样式-->  
    <!-- <div slot="title" class="header-title">
        <span>管理员创建</span>

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="菜单预览" :visible.sync="dialogFormVisible" width="500px" @opened="opened" @closed="closed">
+  <el-dialog title="菜单预览" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="500px" @opened="opened" @closed="closed">
     <el-tree
       ref="menuTree"
       :data="menus"

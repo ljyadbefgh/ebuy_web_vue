@@ -38,6 +38,10 @@ export default new Router({
           component: MenuManage
         },
         {
+          path: 'PurviewManage',
+          component: () => import("@/views/purviewmanage/PurviewManage")
+        },
+        {
           path: 'RoleManage',
           component: () => import("@/views/rolemanage/RoleManage")
         }

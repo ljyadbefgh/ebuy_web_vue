@@ -68,7 +68,7 @@
         fixed="right"
         align="center"
         label="操作"
-        width="270">
+        width="280">
         <template slot-scope="scope">
           <el-button type="primary" @click="addMenu(scope.row)">添加子菜单</el-button>
           <el-button type="primary" @click="editMenu(scope.row)">编辑</el-button>

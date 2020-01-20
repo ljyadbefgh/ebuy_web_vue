@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="菜单创建" :visible.sync="dialogFormVisible" width="500px" @opened="opened" @closed="closed">
+  <el-dialog title="菜单创建" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="500px" @opened="opened" @closed="closed">
     <!--下面这个可以替换原始的dialog的标题样式-->  
    <!-- <div slot="title" class="header-title">
        <span>管理员创建</span>
@@ -32,6 +32,9 @@
       <el-divider content-position="center">组件设置</el-divider>
       <el-form-item label="组件名称" prop="component">
         <el-input v-model="form.component"></el-input>
+      </el-form-item>
+      <el-form-item label="组件图片" prop="iconCls" placeholder="请结合前端，填写图片样式名称">
+        <el-input v-model="form.iconCls"></el-input>
       </el-form-item>
       <el-form-item label="路由地址" prop="route">
         <el-input v-model="form.route"></el-input>
@@ -81,6 +84,7 @@
                     url:'',
                     enabled:true,
                     component:'',
+                    iconCls:'',
                     route:'',
                     path:'',
                     requireAuth:true,
@@ -105,6 +109,9 @@
                     ],
                     component: [
                         { max: 20, message: '长度不能超过20个字符', trigger: 'blur' }
+                    ],
+                    iconCls: [
+                        { max: 200, message: '长度不能超过200个字符', trigger: 'blur' }
                     ],
                     route: [
                         { max: 200, message: '长度不能超过200个字符', trigger: 'blur' }

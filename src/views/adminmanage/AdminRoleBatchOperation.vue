@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="为选择的账户赋予相应的角色" :visible.sync="dialogFormVisible" width="600">
+  <el-dialog title="为选择的账户赋予相应的角色" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="600">
     <!--下面这个可以替换原始的dialog的标题样式-->  
    <!-- <div slot="title" class="header-title">
        <span>管理员创建</span>

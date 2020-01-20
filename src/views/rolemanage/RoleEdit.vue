@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="角色编辑" :visible.sync="dialogFormVisible" width="500px" @opened="opened" @closed="closed">
+  <el-dialog title="角色编辑" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="500px" @opened="opened" @closed="closed">
     <el-form :model="form" :rules="rules" ref="form" label-width="80px">
       <el-form-item label="英文名" prop="name" placeholder="必须以ROLE_开头">
         <el-input v-model="form.name" maxlength="30" show-word-limit></el-input>
@@ -95,6 +95,7 @@
                                         message: msg.msg
                                     });
                                     this.$emit("roleTableRefresh");//刷新父组件的表格
+                                    this.closeDialog();//关闭对话框
                                 }else{//如果修改失败
                                     this.$message.error(msg.msg);
                                 }

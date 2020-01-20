@@ -271,8 +271,8 @@
                         row.unLocked=!callback;//让开关状态回到修改前
                     });
             },
-            handleSelectionChange(value){//当选择项发生变化时会触发该事件，这里用于获取选择的记录（多选）.value可以获取所有选择了的行记录row
-                this.multipleSelection=value;
+            handleSelectionChange(selection){//当选择项发生变化时会触发该事件，这里用于获取选择的记录（多选）.value可以获取所有选择了的行记录row
+                this.multipleSelection=selection;
                 if(this.multipleSelection.length>0){//如果选择了记录
                     this.disabled=false;
                 }else{//如果没有选择记录
