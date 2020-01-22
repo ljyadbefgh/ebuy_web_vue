@@ -3,10 +3,10 @@
       <el-form :model="loginForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="login-container" label-position="left">
         <h3 class="login_title">订餐系统后台登陆</h3>
         <el-form-item label="账户名" prop="username">
-          <el-input type="username" v-model="loginForm.username" autocomplete="off"></el-input>
+          <el-input  v-model="loginForm.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="loginForm.password" autocomplete="off"></el-input>
+          <el-input  show-password v-model="loginForm.password" autocomplete="off" ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">登陆</el-button>

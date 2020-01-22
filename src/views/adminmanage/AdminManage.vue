@@ -9,6 +9,7 @@
           <el-form-item label="网名" >
             <el-input v-model="adminQuery.name" placeholder="网名"></el-input>
           </el-form-item>
+          <el-form-item label="角色" >
           <el-select v-model="adminQuery.roleIds" @change="roleSelect" filterable  multiple placeholder="请选择">
             <el-option
               v-for="item in roles"
@@ -17,6 +18,30 @@
               :value="item.id">
             </el-option>
           </el-select>
+          </el-form-item>
+          <el-form-item label="注册时间" >
+            <el-date-picker
+              v-model="adminQuery.createTimeQueryOfBegin"
+              :picker-options="createTimeQueryOfBeginPickerOption"
+              type="datetime"
+              format="yyyy-MM-dd HH:mm:ss"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
+          -
+            <el-date-picker
+              v-model="adminQuery.createTimeQueryOfEnd"
+              :picker-options="createTimeQueryOfEndPickerOption"
+              type="datetime"
+              format="yyyy-MM-dd HH:mm:ss"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">查询</el-button>
           </el-form-item>
@@ -168,10 +193,28 @@
                 //分页-服务端返回的数值
                 total:0,//总记录数
                 hideOnSinglePage:false,//如果只有一页，则隐藏分页栏，隐藏之后无法再选择恢复（例如改变每页的最大记录数为单页后，无法再修改每页记录数，因为分页栏已经消失）。false为不隐藏，如果不隐藏可以不在分页插件设置该属性。
+                createTimeQueryOfBeginPickerOption: {//日期插件-开始日期的设置
+                    disabledDate: time => {
+                        if (this.adminQuery.createTimeQueryOfEnd) {
+                            // 让开始日期比结束日期少一天，86400000L=1天=24小时*60分钟*60秒*1000毫秒。
+                            return time.getTime() > new Date(this.adminQuery.createTimeQueryOfEnd).getTime()-86400000;
+                        }
+                    }
+                },
+                createTimeQueryOfEndPickerOption: {//日期插件-截止日期的设置
+                    disabledDate: time => {
+                        if (this.adminQuery.createTimeQueryOfBegin) {
+                            // 让结束日期比开始日期多一天，86400000L=1天=24小时*60分钟*60秒*1000毫秒。
+                            return time.getTime() < new Date(this.adminQuery.createTimeQueryOfBegin).getTime()+86400000;
+                        }
+                    }
+                },
                 adminQuery:{//查询条件
                     'username': null,//账户名
                     'name': null,//姓名
-                    'roleIds':[]//下拉框选择的角色集合
+                    'roleIds':[],//下拉框选择的角色集合
+                    'createTimeQueryOfBegin':'',//注册日期范围-开始
+                    'createTimeQueryOfEnd':''//注册日期范围-截止
                 },
                 roles:[],//所有角色集合，用于从服务端获取，放到查询条件中展示
                 operatorOptions: [{
@@ -218,7 +261,9 @@
                             limit: this.limit,
                             username:this.adminQuery.username,
                             name:this.adminQuery.name,
-                            roleIds:this.adminQuery.roleIds.toString()
+                            roleIds:this.adminQuery.roleIds.toString(),
+                            createTimeQueryOfBegin:this.adminQuery.createTimeQueryOfBegin,
+                            createTimeQueryOfEnd:this.adminQuery.createTimeQueryOfEnd
                         }
                     })
                     .then(response => {//获取返回数据
@@ -246,6 +291,7 @@
                 this.getAdminList();
             },
             search(){//执行查询条件
+
                 this.getAdminList();
             },
             unLockedChange(callback,row){//开关事件，针对管理员锁定滑块。callback为回调函数的值（开关的最新状态），id为管理账户的id属性值

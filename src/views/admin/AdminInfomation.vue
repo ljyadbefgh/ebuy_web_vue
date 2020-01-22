@@ -65,7 +65,7 @@
                             this.$message.error(msg.msg);
                         }
                     })
-            },
+            }
         },
         mounted() {
             this.getMyAdmin();

@@ -4,9 +4,7 @@ import Router from 'vue-router'
 //异步加载引入
 const Login = () => import("@/views/Login")
 const Index = () => import("@/views/Index")
-const AdminManage = () => import("@/views/adminmanage/AdminManage")//导入管理员管理组件
 const AdminInfomation = () => import("@/views/admin/AdminInfomation")//导入管理员详细信息组件
-const MenuManage = () => import("@/views/menumanage/MenuManage")//导入菜单管理组件
 
 Vue.use(Router)
 
@@ -30,12 +28,20 @@ export default new Router({
           component: AdminInfomation
         },
         {
+          path: 'AdminEdit',
+          component: () => import("@/views/admin/AdminEdit")
+        },
+        {
+          path: 'PasswordEdit',
+          component: () => import("@/views/admin/PasswordEdit")
+        },
+        {
           path: 'AdminManage',
-          component: AdminManage
+          component: () => import("@/views/adminmanage/AdminManage")
         },
         {
           path: 'MenuManage',
-          component: MenuManage
+          component: () => import("@/views/menumanage/MenuManage")
         },
         {
           path: 'PurviewManage',

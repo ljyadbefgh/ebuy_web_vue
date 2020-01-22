@@ -49,7 +49,7 @@ const getRootPathAtTreeByKey=(value, key, arr) => {
 const setTreeNodeChildrenForUndefined=(data)=>{
   // 循环遍历json数据
   for(let i=0;i<data.length;i++){
-   if(data[i].children==null||data[i].children.length==0){//data[i].children==null为对节点作验证，防止下面的length因为数组为null，出错
+   if(data[i].children==null||data[i].children.length==0){//data[i].children==null为对节点作验证，防止后面的length因为数组为null，出错
       data[i].children=undefined;
     }else {
       // children若不为空数组，则继续 递归调用 本方法
@@ -58,7 +58,25 @@ const setTreeNodeChildrenForUndefined=(data)=>{
   }
 }
 
+/**
+ * 获取树形菜单的节点总数（递归）
+ * 说明：
+ * @param data 树形数组的json格式。
+ * @returns {*}
+ */
+const getNodeNumberFromTreeNode=(data)=>{
+  let number=data.length;//获取当前目录的节点数
+  // 循环遍历json数据
+  for(let i=0;i<data.length;i++){
+    if(data[i].children!=null&&data[i].children.length>0){//data[i].children==null为对节点作验证，防止后面的length因为数组为null，出错
+      number+=getNodeNumberFromTreeNode(data[i].children);
+    }
+  }
+  return number;
+}
+
 export default {
   getRootPathAtTreeByKey: getRootPathAtTreeByKey, //获取当前节点的完整路径值（含父节点路径-递归，不包含子节点路径）
-  setTreeNodeChildrenForUndefined:setTreeNodeChildrenForUndefined
+  setTreeNodeChildrenForUndefined:setTreeNodeChildrenForUndefined, //针对element ui的cascade的BUG设计
+  getNodeNumberFromTreeNode:getNodeNumberFromTreeNode // 获取树形菜单的节点总数（递归）
 }
