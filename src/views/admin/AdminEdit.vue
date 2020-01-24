@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <el-form :model="form" :rules="rules"  ref="form" label-width="80px">
       <el-form-item label="账户名" prop="username" align="left" >
         <el-input v-model="form.username"></el-input>
@@ -22,6 +23,10 @@
 <script>
     export default {
         name: "AdminEdit",
+       /* components: {
+            MyBreadcrumb:() => import("@/components/MyBreadcrumb")
+        },*/
+
         data() {
             return {
                 form:{},

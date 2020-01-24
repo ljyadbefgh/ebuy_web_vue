@@ -66,15 +66,15 @@
               <el-button icon="el-icon-user-solid" size="small">{{$store.getters.admin}}<i class="el-icon-arrow-down el-icon--right"></i></el-button>
               <el-dropdown-menu>
                 <el-dropdown-item  command="admin_detail">个人资料</el-dropdown-item>
-                <el-dropdown-item  command="admin_detail">基本信息编辑</el-dropdown-item>
-                <el-dropdown-item  command="admin_detail">密码修改</el-dropdown-item>
+                <el-dropdown-item  command="AdminEdit">基本信息编辑</el-dropdown-item>
+                <el-dropdown-item  command="PasswordEdit">密码修改</el-dropdown-item>
                 <el-dropdown-item command="admin_logout" divided>退出</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </el-menu>
-
-
         </el-header>
+        <MyBreadcrumb></MyBreadcrumb>
+
 
         <el-main>
           <router-view></router-view>
@@ -89,7 +89,8 @@
     export default {
         name: "Index",
         components: {
-            SideMeuns: () => import("@/components/SideMeuns.vue")//引入左侧树形菜单组件
+            SideMeuns: () => import("@/components/SideMeuns.vue"),//引入左侧树形菜单组件
+            MyBreadcrumb:() => import("@/components/MyBreadcrumb")
         },
         data() {
             return {
@@ -101,8 +102,12 @@
             handleCommand(command) {
                 if(command=="admin_detail"){
                     if(this.$route.path!="/admin"){//只有当前不在该路由才进行跳转。否则会出错
-                        this.$router.push("/admin");
+                        this.$router.push("/admin/admin/AdminInfomation");
                     }
+                }else if(command=="AdminEdit"){
+                    this.$router.push("/admin/admin/AdminEdit");
+                }else if(command=="PasswordEdit"){
+                    this.$router.push("/admin/admin/PasswordEdit");
                 }else if(command=="admin_logout"){
                     this.$store.commit("logout_admin");//将账户信息注销
                     this.$router.push("/login");

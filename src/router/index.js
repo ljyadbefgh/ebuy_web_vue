@@ -4,12 +4,14 @@ import Router from 'vue-router'
 //异步加载引入
 const Login = () => import("@/views/Login")
 const Index = () => import("@/views/Index")
-const AdminInfomation = () => import("@/views/admin/AdminInfomation")//导入管理员详细信息组件
+const MyLayer = () => import("@/components/Layer") // 提供给有children的路由组件（并且没有要展示视图的容器展示）。特别说明：如果没有，则该路由组件的子路由将无法展示
+
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
+    {path:'*',redirect:'/'},//如果要跳转的路由不存在，则跳转到首页
     {
       path: '/',
       redirect:'login'
@@ -21,35 +23,64 @@ export default new Router({
     },
     {
       path: '/admin',
+      name:'后台首页',
       component: Index,
       children:[ // 使用 children 属性，实现子路由，同时，子路由的 path 前面，不要带 / ，否则永远以根路径开始请求，这样不方便我们用户去理解URL地址
         {
           path: '',//默认子组件首页
-          component: AdminInfomation
+          name:'后台主界面',
+          component: () => import("@/views/Main")
         },
         {
-          path: 'AdminEdit',
-          component: () => import("@/views/admin/AdminEdit")
+          path: 'admin',//默认个人账户管理
+          name:'个人模块',
+          redirect:'/admin/admin/AdminInfomation',
+          component: MyLayer,
+          children:[ // 使用 children 属性，实现子路由，同时，子路由的 path 前面，不要带 / ，否则永远以根路径开始请求，这样不方便我们用户去理解URL地址
+            {
+              path: 'AdminInfomation',
+              name:'管理账户详细信息',
+              component: () => import("@/views/admin/AdminInfomation") //导入管理员详细信息组件
+            },
+            {
+              path: 'AdminEdit',
+              name:'基本信息修改',
+              component: () => import("@/views/admin/AdminEdit")
+            },
+            {
+              path: 'PasswordEdit',
+              name:'密码修改',
+              component: () => import("@/views/admin/PasswordEdit")
+            }
+          ]
         },
         {
-          path: 'PasswordEdit',
-          component: () => import("@/views/admin/PasswordEdit")
-        },
-        {
-          path: 'AdminManage',
-          component: () => import("@/views/adminmanage/AdminManage")
-        },
-        {
-          path: 'MenuManage',
-          component: () => import("@/views/menumanage/MenuManage")
-        },
-        {
-          path: 'PurviewManage',
-          component: () => import("@/views/purviewmanage/PurviewManage")
-        },
-        {
-          path: 'RoleManage',
-          component: () => import("@/views/rolemanage/RoleManage")
+          path: 'adminmanage',//默认个人账户管理
+          name:'管理员模块',
+          redirect:'/admin/adminmanage/AdminManage',
+          component: MyLayer,
+          children:[ // 使用 children 属性，实现子路由，同时，子路由的 path 前面，不要带 / ，否则永远以根路径开始请求，这样不方便我们用户去理解URL地址
+            {
+              path: 'AdminManage',
+              name:'账户管理',
+              component: () => import("@/views/adminmanage/AdminManage")
+            },
+            {
+              path: 'MenuManage',
+              name:'菜单管理',
+              component: () => import("@/views/menumanage/MenuManage")
+            },
+            {
+              path: 'PurviewManage',
+              name:'权限管理',
+              component: () => import("@/views/purviewmanage/PurviewManage")
+            },
+            {
+              path: 'RoleManage',
+              name:'角色管理',
+              component: () => import("@/views/rolemanage/RoleManage")
+            }
+          ]
         }
       ]
     }

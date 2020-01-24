@@ -39,6 +39,19 @@ Vue.config.productionTip = false
 import myMethod from './api/my/my_common_methods'
 Vue.prototype.myMethod=myMethod;// 组件中通过this.myCommon.method()调用
 
+/**
+ * to:即将要进入的路由对象
+ * Route: 当前导航正要离开的路由
+ * next: 调用该方法，才能进入下一个路由钩子
+ */
+router.beforeEach((to, from, next) => {
+  //console.log(to.fullPath);// 获取当前路由的完整路径
+  store.commit("setRouteMatched",to.matched);//将路由节点信息存入vuex，to.matched获取当前路由的每个路由节点的完整信息
+  next(); //调用该方法,才能进入下一个钩子
+})
+
+
+
 
 
 /* eslint-disable no-new */

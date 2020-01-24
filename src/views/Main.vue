@@ -2,7 +2,8 @@
   <div class="index">
     <el-card class="box-card" style="text-align:left;">
       <div slot="header" class="clearfix">
-        <span>账户信息</span>
+        <span>默认后台管理页面首页-账户信息</span>
+        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
       </div>
       <div class="text item">
         账户名:{{admin.username}}
@@ -48,7 +49,7 @@
         name: 'AdminInfomation',
         data() {
             return {
-                admin:''
+                admin:{}
             }
         },
         methods:{
