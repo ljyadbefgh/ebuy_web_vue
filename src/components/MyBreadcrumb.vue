@@ -7,7 +7,7 @@
 </template>
 
 <script>
-    //自定义面包屑组件，用于获取路由
+    //自定义面包屑组件，用于展示当前路由的路径
     export default {
         name: "MyBreadcrumb",
         computed: {

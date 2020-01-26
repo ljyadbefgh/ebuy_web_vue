@@ -41,6 +41,14 @@
         label="组件名称">
       </el-table-column>
       <el-table-column
+        align="center"
+        prop="iconCls"
+        label="图片">
+        <template slot-scope="scope">
+          <i v-if="scope.row.iconCls" :class="scope.row.iconCls"></i>
+        </template>
+      </el-table-column>
+      <el-table-column
         prop="path"
         label="组件地址">
       </el-table-column>

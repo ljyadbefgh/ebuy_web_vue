@@ -89,8 +89,7 @@
     export default {
         name: "Index",
         components: {
-            SideMeuns: () => import("@/components/SideMeuns.vue"),//引入左侧树形菜单组件
-            MyBreadcrumb:() => import("@/components/MyBreadcrumb")
+            SideMeuns: () => import("@/components/SideMeuns.vue")//引入左侧树形菜单组件
         },
         data() {
             return {

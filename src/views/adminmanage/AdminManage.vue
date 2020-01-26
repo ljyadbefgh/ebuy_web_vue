@@ -291,7 +291,6 @@
                 this.getAdminList();
             },
             search(){//执行查询条件
-
                 this.getAdminList();
             },
             unLockedChange(callback,row){//开关事件，针对管理员锁定滑块。callback为回调函数的值（开关的最新状态），id为管理账户的id属性值

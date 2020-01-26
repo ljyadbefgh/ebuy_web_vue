@@ -5,7 +5,8 @@ import Router from 'vue-router'
 const Login = () => import("@/views/Login")
 const Index = () => import("@/views/Index")
 const MyLayer = () => import("@/components/Layer") // 提供给有children的路由组件（并且没有要展示视图的容器展示）。特别说明：如果没有，则该路由组件的子路由将无法展示
-
+const MyBreadcrumb =() => import("@/components/MyBreadcrumb") //自定义面包屑组件，用于展示当前路由的路径
+Vue.component('MyBreadcrumb',MyBreadcrumb)// 注册为全局组件
 
 Vue.use(Router)
 
@@ -32,7 +33,7 @@ export default new Router({
           component: () => import("@/views/Main")
         },
         {
-          path: 'admin',//默认个人账户管理
+          path: 'admin',//个人账户管理
           name:'个人模块',
           redirect:'/admin/admin/AdminInfomation',
           component: MyLayer,
@@ -55,7 +56,7 @@ export default new Router({
           ]
         },
         {
-          path: 'adminmanage',//默认个人账户管理
+          path: 'adminmanage',//账户管理
           name:'管理员模块',
           redirect:'/admin/adminmanage/AdminManage',
           component: MyLayer,
@@ -79,6 +80,19 @@ export default new Router({
               path: 'RoleManage',
               name:'角色管理',
               component: () => import("@/views/rolemanage/RoleManage")
+            }
+          ]
+        },
+        {
+          path: 'customermanage',//客户管理
+          name:'客户模块',
+          redirect:'/admin/customermanage/CustomerManage',
+          component: MyLayer,
+          children:[ // 使用 children 属性，实现子路由，同时，子路由的 path 前面，不要带 / ，否则永远以根路径开始请求，这样不方便我们用户去理解URL地址
+            {
+              path: 'CustomerManage',
+              name:'客户管理',
+              component: () => import("@/views/customermanage/CustomerManage")
             }
           ]
         }
