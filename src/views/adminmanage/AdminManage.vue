@@ -74,23 +74,29 @@
             width="180">
           </el-table-column>
           <el-table-column
+            width="50"
+            align="center"
             prop="sex"
             label="性别"
             :formatter="formatSex" >
           </el-table-column>
           <el-table-column
+            align="center"
             prop="roleNumber"
             label="角色数量">
           </el-table-column>
           <el-table-column
+            align="center"
             prop="menuNumber"
             label="菜单数量">
           </el-table-column>
           <el-table-column
+            align="center"
             prop="saveProductNumber"
             label="发布产品数">
           </el-table-column>
           <el-table-column
+            align="center"
             prop="createTime"
             label="注册时间"
             width="180">

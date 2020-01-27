@@ -17,6 +17,7 @@
         <!--  <el-table-column type="index" width="60" label="序号" align="center">
           </el-table-column>-->
         <el-table-column
+          width="200"
           prop="name"
           label="权限名">
         </el-table-column>
@@ -25,6 +26,8 @@
           label="路径">
         </el-table-column>
         <el-table-column
+          width="70"
+          align="center"
           prop="enabled"
           label="是否启用">
           <template slot-scope="scope">
@@ -33,14 +36,19 @@
           </template>
         </el-table-column>
         <el-table-column
+          width="60"
+          align="center"
           prop="orderNum"
           label="优先级">
         </el-table-column>
         <el-table-column
+          width="60"
+          align="center"
           prop="roleNumber"
           label="角色数">
         </el-table-column>
         <el-table-column
+          show-overflow-tooltip
           prop="description"
           label="描述">
         </el-table-column>

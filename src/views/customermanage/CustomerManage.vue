@@ -79,6 +79,7 @@
           label="姓名">
         </el-table-column>
         <el-table-column
+          align="center"
           prop="sex"
           label="性别">
           <template slot-scope="scope">

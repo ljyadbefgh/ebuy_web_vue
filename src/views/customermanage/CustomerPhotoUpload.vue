@@ -6,7 +6,7 @@
     <el-upload
       ref="upload"
       class="upload-demo"
-      accept="image/jpeg,image/gif,image/png"
+      accept="image/jpeg,image/gif,image/png,image/bmp"
       :action="action"
       list-type="picture"
       :on-exceed="uploadExceed"
@@ -17,7 +17,7 @@
       :auto-upload="false">
       <el-button slot="trigger" size="small" type="primary">选取图片</el-button>
       <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传头像</el-button>
-      <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+      <div class="el-upload__tip" slot="tip">只能上传jpg/png/gif/bmp文件</div>
     </el-upload>
 
 

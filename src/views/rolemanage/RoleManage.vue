@@ -25,10 +25,14 @@
           label="英文名">
         </el-table-column>
         <el-table-column
+          width="50"
+          align="center"
           prop="level"
           label="级别">
         </el-table-column>
         <el-table-column
+          width="70"
+          align="center"
           prop="defaultRole"
           label="默认角色">
           <template slot-scope="scope">
@@ -37,6 +41,8 @@
           </template>
         </el-table-column>
         <el-table-column
+          width="70"
+          align="center"
           prop="enabled"
           label="是否启用">
           <template slot-scope="scope">
@@ -50,14 +56,20 @@
           label="角色描述">
         </el-table-column>
         <el-table-column
+          width="60"
+          align="center"
           prop="adminNumber"
           label="账户数">
         </el-table-column>
         <el-table-column
+          width="60"
+          align="center"
           prop="purviewNumber"
           label="权限数">
         </el-table-column>
         <el-table-column
+          width="60"
+          align="center"
           prop="menuNumber"
           label="菜单数">
         </el-table-column>

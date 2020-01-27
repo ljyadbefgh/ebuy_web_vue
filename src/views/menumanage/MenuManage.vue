@@ -15,12 +15,13 @@
      <!-- <el-table-column type="selection" width="40" align="center">
       </el-table-column>-->
       <el-table-column
+        width="200"
         prop="name"
         label="菜单名"
-        sortable
-        width="180">
+      >
       </el-table-column>
       <el-table-column
+        show-overflow-tooltip
         prop="url"
         label="资源地址">
       </el-table-column>
@@ -33,14 +34,18 @@
         </template>
       </el-table-column>
         <el-table-column
+          width="60"
+          align="center"
           prop="orderNum"
           label="优先级">
       </el-table-column>
       <el-table-column
+        show-overflow-tooltip
         prop="component"
         label="组件名称">
       </el-table-column>
       <el-table-column
+        width="50"
         align="center"
         prop="iconCls"
         label="图片">
@@ -49,24 +54,30 @@
         </template>
       </el-table-column>
       <el-table-column
+        show-overflow-tooltip
         prop="path"
         label="组件地址">
       </el-table-column>
       <el-table-column
+        show-overflow-tooltip
         prop="route"
         label="路由地址">
       </el-table-column>
       <el-table-column
+        width="70"
+        align="center"
         prop="requireAuth"
-        label="需要权限">
+        label="要求登陆">
         <template slot-scope="scope">
           <el-tag size="medium" v-if="scope.row.requireAuth==true" type="success">是</el-tag>
           <el-tag size="medium" v-if="scope.row.requireAuth==false" type="info">否</el-tag>
         </template>
       </el-table-column>
       <el-table-column
+        width="50"
+        align="center"
         prop="requireAuth"
-        label="是否显示">
+        label="显示">
         <template slot-scope="scope">
           <el-tag size="medium" v-if="scope.row.display==true" type="success">是</el-tag>
           <el-tag size="medium" v-if="scope.row.display==false" type="info">否</el-tag>
@@ -76,7 +87,7 @@
         fixed="right"
         align="center"
         label="操作"
-        width="280">
+        width="290">
         <template slot-scope="scope">
           <el-button type="primary" @click="addMenu(scope.row)">添加子菜单</el-button>
           <el-button type="primary" @click="editMenu(scope.row)">编辑</el-button>
