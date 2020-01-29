@@ -46,8 +46,7 @@
         },
         data() {
             return {
-                dialogFormVisible: false,
-                form: {}
+                dialogFormVisible: false
             }
         },
         methods: {

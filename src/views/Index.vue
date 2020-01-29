@@ -108,8 +108,27 @@
                 }else if(command=="PasswordEdit"){
                     this.$router.push("/admin/admin/PasswordEdit");
                 }else if(command=="admin_logout"){
-                    this.$store.commit("logout_admin");//将账户信息注销
-                    this.$router.push("/login");
+                    this.$axios.get('/api/backstage/logout')
+                    //then获取成功；response成功后的返回值（对象）
+                        .then(response=>{
+                            let msg=response.data;//获取返回数据
+                            if(msg.code==0){//如果爱护小成功
+                                this.$message({
+                                    message:'成功注销',
+                                    type:'success'
+                                });
+                                this.$store.commit("logout_admin");//将账户信息注销
+                                this.$router.push("/login");
+                            }else{
+                                _this.$message.error(msg.msg);
+                            }
+                        })
+                        //获取失败
+                        .catch(error=>{
+                            console.log(error);
+                            console.log('网络错误，不能访问');
+                        });
+
                 }
             },
             handleSelect(key, keyPath) {

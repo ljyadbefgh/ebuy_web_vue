@@ -120,7 +120,7 @@
                                 this.form = msg.data;
                                 this.form.menuIdPathArray=new Array();//创建数组来获取父组件的路径
                                 if(this.form.parentId!=null||this.form.parentId!=undefined){//如果存在父栏目
-                                    let nodePathArray = this.myMethod.getRootPathAtTreeByKey(this.form.parentId, 'id', this.menuArray);//根据指定的节点获取该节点的完整父路径（含当前节点）
+                                    let nodePathArray = this.myMethod.tree.getRootPathAtTreeByKey(this.form.parentId, 'id', this.menuArray);//根据指定的节点获取该节点的完整父路径（含当前节点）
                                     for(let i=0;i<nodePathArray.length;i++){//将节点集合转换为id集合（这样才符合树形组件默认值方式）
                                         this.form.menuIdPathArray.push(nodePathArray[i].id);
                                     }

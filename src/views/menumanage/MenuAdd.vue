@@ -140,7 +140,7 @@
                 this.form.menuIdPathArray=[];//首先清空上一次选择的值,但是cascade这个组件依旧有BUG，就是标签虽然改了，值也是对的，但是打开后显示的是上次的列表
                 this.form.parentId=parentId;//重新赋值当前节点的值
                 if(parentId!=undefined){//如果id传了之过来，说明是要创建子目录；否则是创建顶级目录
-                    let nodePathArray = this.myMethod.getRootPathAtTreeByKey(parentId, 'id', this.menuArray);//根据指定的节点获取该节点的完整父路径（含当前节点）
+                    let nodePathArray = this.myMethod.tree.getRootPathAtTreeByKey(parentId, 'id', this.menuArray);//根据指定的节点获取该节点的完整父路径（含当前节点）
                     for(let i=0;i<nodePathArray.length;i++){//将节点集合转换为id集合（这样才符合树形组件默认值方式）
                         this.form.menuIdPathArray.push(nodePathArray[i].id);
                     }

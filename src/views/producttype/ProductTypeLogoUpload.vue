@@ -2,7 +2,7 @@
   <el-dialog title="头像上传" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="500px" @opened="opened" @closed="closed">
 
     <img v-if="imageUrl!=null&&imageUrl!=''" :src="imageUrl"  style="height:180px;min-width:120px;">
-    <img v-else :src="myVariable.pic.noPicSrc"  style="height:180px;min-width:120px;">
+    <img v-else :src="myVariable.pic.noPic4Src"  style="height:180px;min-width:120px;">
     <el-upload
       ref="upload"
       class="upload-demo"
@@ -26,29 +26,28 @@
 
 <script>
     export default {
-        name: "CustomerPhotoUpload",
+        name: "ProductTypeLogoUpload",
         data() {
             return {
                 dialogFormVisible: false,
-                customer:{},
+                productType:{},
                 action:'',// 设置图片提交的地址
                 imageUrl: ''
             }
-
         },
         methods: {
             openDialog(id) {//打开对话框
                 this.dialogFormVisible = true;
-                this.action="api/backstage/customermanage/uploadPhoto/"+id;//定义上传头像的地址
+                this.action="api/backstage/producttype/uploadPhoto/"+id;//定义上传头像的地址
                 this.$axios
-                    .get("api/backstage/customermanage/"+id)
+                    .get("api/backstage/producttype/"+id)
                     .then(response => {//获取返回数据/
                         let msg=response.data;
                         if (msg.code === 0) {
-                            this.customer=msg.data;
-                            let picUrl=this.customer.picUrl;
-                            if(picUrl!=null&&picUrl!=''){
-                                this.imageUrl=picUrl+"?"+Math.random();//重要：被坑了很久实验多次才成功，并且要这里设置。设置图片地址不缓存，因为如果头像有上传，地址都是一样的（服务端决定）。因此如果不加入，浏览器会因为图片地址不变化设置缓存，导致新上传的图片无法在浏览器显示
+                            this.productType=msg.data;
+                            let imageUrl=this.productType.imageUrl;
+                            if(imageUrl!=null&&imageUrl!=''){
+                                this.imageUrl=imageUrl+"?"+Math.random();//重要：被坑了很久实验多次才成功，并且要这里设置。设置图片地址不缓存，因为如果头像有上传，地址都是一样的（服务端决定）。因此如果不加入，浏览器会因为图片地址不变化设置缓存，导致新上传的图片无法在浏览器显示
                             }else{
                                 this.imageUrl='';
                             }
@@ -81,7 +80,7 @@
                 if (response.code === 0) {//如果上传成功
                     this.imageUrl=window.URL.createObjectURL(file.raw);//将图片变为已经上传的图片。注意：从本地图片读取而不是服务端
                     //fileList.length=0;// 清空文件列表中的图片集合
-                    this.$emit("customerTableRefresh");//刷新父组件的表格
+                    this.$emit("tableRefresh");//刷新父组件的表格
                 }else{
                     this.$message.error(response.msg);
                 }

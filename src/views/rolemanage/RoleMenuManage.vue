@@ -54,7 +54,7 @@
                         if (msg.code === 0) {
                             this.menus = msg.data.treeMenu;
                             this.menuIds=msg.data.menusId;
-                            this.menuNodeNumber=this.myMethod.getNodeNumberFromTreeNode(this.menus);// 获取树节点的总数（递归）
+                            this.menuNodeNumber=this.myMethod.tree.getNodeNumberFromTreeNode(this.menus);// 获取树节点的总数（递归）
                             if(this.menuNodeNumber==this.menuIds.length){//如果已勾选的菜单和总菜单的数量一致
                                 this.checkAll=true;//设置全选复选框为勾选状态
                             }else{//如果不是

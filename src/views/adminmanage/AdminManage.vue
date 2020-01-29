@@ -43,7 +43,10 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="search">查询</el-button>
+            <el-button type="primary" @click="getAdminList">查询</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="adminQuery={};getAdminList();">清空查询条件</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -84,6 +87,19 @@
             align="center"
             prop="roleNumber"
             label="角色数量">
+            <template slot-scope="scope">
+              <template v-if="scope.row.roleNumber>0">
+                <el-popover  placement="top" effect="light" trigger="click">
+                  <el-table :data="scope.row.roles">
+                    <el-table-column width="150" property="name" label="角色中文名"></el-table-column>
+                    <el-table-column width="150" property="nameZH" label="角色英文名"></el-table-column>
+                    <el-table-column width="100" property="level" label="级别"></el-table-column>
+                  </el-table>
+                  <el-link type="primary" slot="reference">{{scope.row.roleNumber}}</el-link>
+                </el-popover>
+              </template>
+              <template v-else>{{scope.row.roleNumber}}</template>
+            </template>
           </el-table-column>
           <el-table-column
             align="center"
@@ -216,8 +232,8 @@
                     }
                 },
                 adminQuery:{//查询条件
-                    'username': null,//账户名
-                    'name': null,//姓名
+                    'username': '',//账户名
+                    'name': '',//姓名
                     'roleIds':[],//下拉框选择的角色集合
                     'createTimeQueryOfBegin':'',//注册日期范围-开始
                     'createTimeQueryOfEnd':''//注册日期范围-截止
@@ -260,6 +276,10 @@
                     })
             },
             getAdminList() {//从服务端读取管理员列表
+                let roleIdsString=null;
+                if(this.adminQuery.roleIds!=null){//必须要角色集合有值才进行toString()转换，否则会出异常
+                    roleIdsString=this.adminQuery.roleIds.toString();
+                }
                 this.$axios
                     .get("/api/backstage/adminmanage",{
                         params: {
@@ -267,7 +287,7 @@
                             limit: this.limit,
                             username:this.adminQuery.username,
                             name:this.adminQuery.name,
-                            roleIds:this.adminQuery.roleIds.toString(),
+                            roleIds:roleIdsString,
                             createTimeQueryOfBegin:this.adminQuery.createTimeQueryOfBegin,
                             createTimeQueryOfEnd:this.adminQuery.createTimeQueryOfEnd
                         }

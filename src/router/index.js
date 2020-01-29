@@ -12,7 +12,6 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    {path:'*',redirect:'/'},//如果要跳转的路由不存在，则跳转到首页
     {
       path: '/',
       redirect:'login'
@@ -32,7 +31,7 @@ export default new Router({
           name:'后台主界面',
           component: () => import("@/views/Main")
         },
-        {
+        {//二级
           path: 'admin',//个人账户管理
           name:'个人模块',
           redirect:'/admin/admin/AdminInfomation',
@@ -55,7 +54,7 @@ export default new Router({
             }
           ]
         },
-        {
+        {//二级
           path: 'adminmanage',//账户管理
           name:'管理员模块',
           redirect:'/admin/adminmanage/AdminManage',
@@ -83,7 +82,7 @@ export default new Router({
             }
           ]
         },
-        {
+        {//二级
           path: 'customermanage',//客户管理
           name:'客户模块',
           redirect:'/admin/customermanage/CustomerManage',
@@ -95,8 +94,40 @@ export default new Router({
               component: () => import("@/views/customermanage/CustomerManage")
             }
           ]
+        },
+        {//二级
+          path: 'product',
+          name:'产品模块',
+          redirect:'/admin/product/ProductTypeManage',
+          component: MyLayer,
+          children:[ // 使用 children 属性，实现子路由，同时，子路由的 path 前面，不要带 / ，否则永远以根路径开始请求，这样不方便我们用户去理解URL地址
+            {
+              path: 'ProductTypeManage',
+              name:'产品栏目管理',
+              component: () => import("@/views/producttype/ProductTypeManage.vue")
+            },
+            {
+              path: 'ProductManage',
+              name:'产品管理',
+              component: () => import("@/views/product/ProductManage.vue")
+            }
+          ]
+        },
+        {//二级
+          path: 'error',//错误页面
+          name:'错误页面',
+          redirect:'/admin/error/CustomerManage',
+          component: MyLayer,
+          children:[ // 使用 children 属性，实现子路由，同时，子路由的 path 前面，不要带 / ，否则永远以根路径开始请求，这样不方便我们用户去理解URL地址
+            {
+              path: '404',
+              name:'404',
+              component: () => import('@/views/404.vue'),
+            }
+          ]
         }
-      ]
-    }
-  ]
+      ]// 二级route
+    },
+    {path:'*',redirect:'/admin/error/404'},//如果要跳转的路由不存在，则跳转到404页面
+  ] // 一级route
 })

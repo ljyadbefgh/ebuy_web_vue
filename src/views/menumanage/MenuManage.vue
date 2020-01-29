@@ -134,7 +134,7 @@
                     .then(response => {//获取返回数据
                         let msg=response.data;
                         if (msg.code === 0) {
-                            this.myMethod.setTreeNodeChildrenForUndefined(msg.data);
+                            this.myMethod.tree.setTreeNodeChildrenForUndefined(msg.data);
                             this.menuArray = msg.data;
                         }else{
                             this.$message.error(msg.msg);

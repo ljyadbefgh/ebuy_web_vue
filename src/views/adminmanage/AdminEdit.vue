@@ -13,10 +13,14 @@
         <el-input v-model="adminForm.name"></el-input>
       </el-form-item>
       <el-form-item label="性别" style="text-align: left;" prop="sex">
-        <el-select v-model="adminForm.sex" placeholder="请选择">
+        <el-radio-group v-model="adminForm.sex">
+          <el-radio-button label="1">男</el-radio-button>
+          <el-radio-button label="2">女</el-radio-button>
+        </el-radio-group>
+        <!--<el-select v-model="adminForm.sex" placeholder="请选择">
           <el-option key="1" value="1" label="男"></el-option>
           <el-option key="2" value="2" label="女"></el-option>
-        </el-select>
+        </el-select>-->
       </el-form-item>
       <el-form-item label="角色" align="left" prop="roleIds">
         <el-checkbox-group v-model="adminForm.roleIds" >

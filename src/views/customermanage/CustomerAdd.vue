@@ -8,10 +8,14 @@
         <el-input v-model="form.name" maxlength="10" show-word-limit></el-input>
       </el-form-item>
       <el-form-item label="性别" style="text-align: left;" prop="sex">
-        <el-select v-model="form.sex" placeholder="请选择">
+        <el-radio-group v-model="form.sex">
+          <el-radio-button label="1">男</el-radio-button>
+          <el-radio-button label="2">女</el-radio-button>
+        </el-radio-group>
+<!--        <el-select v-model="form.sex" placeholder="请选择">
           <el-option value="1" label="男"></el-option>
           <el-option value="2" label="女"></el-option>
-        </el-select>
+        </el-select>-->
       </el-form-item>
       <el-form-item label="手机号码" prop="tel">
         <el-input v-model="form.tel"></el-input>
