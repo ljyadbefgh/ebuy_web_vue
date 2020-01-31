@@ -61,6 +61,7 @@
                         let msg=response.data;
                         if (msg.code === 0) {
                             this.admin = msg.data;
+                            _this.$store.commit("setUeditorServerUrlWithCredentials",msg.JSESSIONID);//客户端的session对象保存下来，目前是用于ueditor
                         }else{
                             this.$message.error(msg.msg);
                         }

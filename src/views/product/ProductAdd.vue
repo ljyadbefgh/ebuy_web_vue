@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="产品创建" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="500px" @opened="opened" >
+  <el-dialog title="产品创建" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="1010px"  @opened="opened" @closed="closed">
     <el-form :model="form" :rules="rules" ref="form" label-width="80px">
       <el-form-item label="产品分类" prop="productTypeId" align="left">
         <el-select-producttype v-model="form.productTypeId"></el-select-producttype>
@@ -7,9 +7,15 @@
       <el-form-item label="名称" prop="name">
         <el-input v-model="form.name" maxlength="10" show-word-limit></el-input>
       </el-form-item>
-      <el-form-item label="图片" prop="pirUrl" align="left">
-        <el-input v-model="form.pirUrl" style="width: 200px;"></el-input>
-        <el-button>上传图片</el-button>
+      <el-form-item label="图片" prop="picUrl" align="left">
+        <el-input v-model="form.picUrl" clearable readonly style="width: 300px;"></el-input>
+        <MyUeditor
+          editorId="picUrlId"
+          :config="picUrlConfig"
+          editorType="image"
+          @uploadPicUrl="uploadPicUrl"
+        >
+        </MyUeditor>
       </el-form-item>
       <el-form-item label="优先级" prop="orderNum" align="left">
         <el-select-orderNum v-model.number="form.orderNum" :orderNumOptions="orderNumOptions"></el-select-orderNum>
@@ -24,7 +30,7 @@
         <el-input v-model.number="form.repository"></el-input>
       </el-form-item>
       <el-form-item label="人气" prop="click">
-        <el-input v-model="form.click"></el-input>
+        <el-input v-model.number="form.click"></el-input>
       </el-form-item>
       <el-form-item label="是否上架" prop="onSale" align="left">
         <el-select v-model="form.onSale"  placeholder="请选择上架状态">
@@ -40,13 +46,20 @@
           v-model="form.description">
         </el-input>
       </el-form-item>
-      <el-form-item label="介绍" prop="content" >
-        <el-input
+      <el-form-item label="介绍" prop="content" align="left">
+        <!--<el-input
           type="textarea"
           :autosize="{ minRows: 10,maxRows: 20}"
           placeholder="请输入内容"
           v-model="form.content">
-        </el-input>
+        </el-input>-->
+        <MyUeditor
+          ref="contentUeditor"
+          editorType="editor"
+          editorId="contentId"
+          :value="form.content"
+          :config="contentConfig">
+        </MyUeditor>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -74,15 +87,28 @@
         data() {
             return {
                 dialogFormVisible: false,
+               /* config: {
+                    //serverUrl:this.myVariable.ueditorServerUrl+";jsessionid="+sessionStorage.getItem("JSESSIONID")+"?"
+                    serverUrl:this.$store.getters.ueditorServerUrlWithCredentials//必须手动将值传过去，因为uedidot.config.js中保存的地址只会读取一次
+                },*/
+                picUrlConfig: {
+                    wordCount: false,
+                },
+                contentConfig: {
+                    // initialFrameWidth: '100%',
+                    // initialFrameHeight: 800,
+                    wordCount: true
+                },
                 form: {
                     productTypeId:null,
                     name: '',
-                    pirUrl:'',
+                    picUrl:'',
                     orderNum:100,
                     originalPrice:0.00,
                     price:0.00,
                     repository:0,
                     click:0,
+                    onSale:'true',
                     description:'',
                     content:''
                 },
@@ -93,6 +119,9 @@
                     name: [
                         { required: true, message: '不能为空', trigger: 'blur' },
                         { min: 2, max: 30, message: '长度在 2 到 20个字符', trigger: 'blur' }
+                    ],
+                    picUrl: [
+                        { required: true, message: '不能为空', trigger: 'blur' }
                     ],
                     orderNum: [
                         { required: true, message: '不能为空', trigger: 'blur' }
@@ -128,6 +157,13 @@
             opened(){//Dialog 打开动画结束时的回调
 
             },
+            closed(){
+                this.$refs['form'].resetFields();//重置表单
+                this.$refs.contentUeditor.setContent("");//清空富文本的值
+            },
+            uploadPicUrl(picUrl){//当点击图片上传时调用，获取ueditor图片上传组件调用图片的地址
+                this.form.picUrl=picUrl;
+            },
             submitForm(formName) {//提交表单事件
                 this.$refs[formName].validate((valid) => {
                     if (valid) {//如果验证通过
@@ -135,6 +171,8 @@
                             id: this.form.productTypeId
                         };
                         this.form.productType=productType;
+                        //获取富文本内容的值
+                        this.form.content=this.$refs.contentUeditor.getContent();
                         this.$axios//将更新后的值传到服务端保存
                             .post("/api/backstage/product",JSON.stringify(this.form))
                             .then(response => {//获取返回数据
@@ -144,7 +182,6 @@
                                         type: "success",
                                         message: msg.msg
                                     });
-                                    this.$refs[formName].resetFields();//重置表单
                                     this.$emit("tableRefresh");//刷新父组件的表格
                                 }else{//如果修改失败
                                     this.$message.error(msg.msg);

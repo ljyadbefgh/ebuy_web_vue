@@ -4,9 +4,13 @@ import Vuex from 'vuex'
 //注册vuex
 Vue.use(Vuex)
 
+///*ljy创建的用来存放公共变量*/
+import myVariable from '@/api/my/my_variable.js'
+
 //状态
 const state={
   admin:sessionStorage.getItem("admin"),//保存登陆的管理账户信息
+  ueditorServerUrlWithCredentials:'',// 保存ueditor访问服务器的地址，要求携带jsessionId。因为它不是通过axios调用的，不会自己跨域保存session信息
   routeMatched:[] //当前路由匹配的完整路径，用于面包屑组件
 }
 
@@ -16,6 +20,9 @@ const getters={
   },
   routeMatched(state){
     return state.routeMatched;
+  },
+  ueditorServerUrlWithCredentials(){//必须通过这个读取，否则刷新后会丢失
+    return myVariable.ueditorServerUrl+";jsessionid="+sessionStorage.getItem("JSESSIONID")+"?";
   }
 }
 
@@ -37,6 +44,9 @@ const mutations={
   logout_admin(state){
     sessionStorage.removeItem("admin");//将账户信息存入本地，否则刷新后会丢失
     state.admin=null;
+  },
+  setUeditorServerUrlWithCredentials(state,JSESSIONID){//JSESSIONID是服务端返回的值
+    sessionStorage.setItem("JSESSIONID",JSESSIONID);//将客户端的session对象保存下来，只用于ueditor
   }
 }
 

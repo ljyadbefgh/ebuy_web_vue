@@ -53,6 +53,7 @@
                             let msg=response.data;//获取返回数据
                             if(msg.code==0){//如果登陆成功
                                 _this.$store.commit("save_admin",_this.loginForm.username);//将账户信息存入
+                                _this.$store.commit("setUeditorServerUrlWithCredentials",msg.data);//客户端的session对象保存下来
                                 _this.$message({
                                         message:'登陆成功',
                                         type:'success'

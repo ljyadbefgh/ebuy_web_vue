@@ -9,8 +9,9 @@ module.exports = {
 
     // Paths
     assetsSubDirectory: 'static',
+    //assetsPublicPath: './',
     assetsPublicPath: '/',
-    proxyTable: {
+    proxyTable: { //只在生产模式下有效
       '/api': {
         //target: process.env.NODE_ENV === 'development'?'http://开发环境':'http://非开发环境',
         //target: 'http://120.76.118.101:8081/', //远程访问的服务器域名

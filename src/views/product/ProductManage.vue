@@ -14,6 +14,7 @@
     <div class="item" align="left" style="margin-bottom: 5px;">
       <el-button @click="$refs.productAddForm.openDialog()" type="primary">添加</el-button>
       <el-button @click="handleDelete" type="primary"  :disabled="disabled">删除</el-button>
+      <el-button @click="$refs.productTransfer.openDialog()" type="primary"  :disabled="disabled">批量转移产品</el-button>
     </div>
     <!--表格-->
     <div class="item">
@@ -123,7 +124,7 @@
           align="center"
           width="130">
           <template slot-scope="scope">
-            <el-button  @click="$refs.productTypeEditForm.openDialog(scope.row.id)" type="primary" plain  icon="el-icon-edit">编辑</el-button>
+            <el-button  @click="$refs.productEditForm.openDialog(scope.row.id)" type="primary" plain  icon="el-icon-edit">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -153,6 +154,20 @@
       @tableRefresh="getTableData"
     />
 
+    <!-- 产品编辑表单 -->
+    <ProductEdit
+      ref="productEditForm"
+      :orderNumOptions="orderNumOptions"
+      @tableRefresh="getTableData"
+    />
+
+    <!-- 产品批量转移 -->
+    <ProductTransfer
+      ref="productTransfer"
+      :products="multipleSelection"
+      @tableRefresh="getTableData"
+    />
+
   </div>
 </template>
 
@@ -163,8 +178,8 @@
         components: {
             ProductSearch: () => import("@/views/product/ProductSearch.vue"),//引入产品查询表单
             ProductAdd: () => import("@/views/product/ProductAdd.vue"),//引入产品添加表单
-            ProductTypeEdit: () => import("@/views/producttype/ProductTypeEdit.vue"),//引入产品类别编辑表单
-            ProductTypeLogoUpload: () => import("@/views/producttype/ProductTypeLogoUpload.vue")//引入产品类别LOGO上传组件
+            ProductEdit: () => import("@/views/product/ProductEdit.vue"),//引入产品编辑表单
+            ProductTransfer: () => import("@/views/product/ProductTransfer.vue")//引入产品类别LOGO上传组件
         },
         data() {
             return {
@@ -182,7 +197,7 @@
                 productQuery:{//查询条件
                     'name': null,//产品名
                     'onSale':null,// 上架状态
-                    'productTypeId':null, //产品栏目id
+                    'productTypeId':'', //产品栏目id
                     'orderNum':null, //优先级
                     'orderType':null // 排序规则
                 },

@@ -7,6 +7,8 @@ const Index = () => import("@/views/Index")
 const MyLayer = () => import("@/components/Layer") // 提供给有children的路由组件（并且没有要展示视图的容器展示）。特别说明：如果没有，则该路由组件的子路由将无法展示
 const MyBreadcrumb =() => import("@/components/MyBreadcrumb") //自定义面包屑组件，用于展示当前路由的路径
 Vue.component('MyBreadcrumb',MyBreadcrumb)// 注册为全局组件
+const MyUeditor =() => import("@/components/MyUeditor.vue") //自定义Ueditor组件
+Vue.component('MyUeditor',MyUeditor)// 注册为全局组件
 
 Vue.use(Router)
 
