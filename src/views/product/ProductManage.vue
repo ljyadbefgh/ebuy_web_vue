@@ -183,7 +183,7 @@
         },
         data() {
             return {
-                disabled:true,//用于批量删除和批量角色分配按钮的可用性属性，只有当选择了复选框时才可以操作
+                disabled:true,//用于批量操作等按钮的可用性属性，只有当选择了复选框时才可以操作
                 table:{// 记录表格数据
                     tableData: [],//表格记录
                     // 分页-传递到服务端的数值
@@ -308,7 +308,10 @@
                 }
             },
             edit(id){// 编辑账户
-                this.$refs.customerEditForm.openDialog(id);
+                this.$nextTick(()=>{
+                    this.$refs.customerEditForm.openDialog(id);
+                })
+
             },
             uploadPhoto(id){// 头像上传
                 this.$refs.customerPhotoUpload.openDialog(id);

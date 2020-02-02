@@ -64,21 +64,23 @@
           label="用户名">
         </el-table-column>
         <el-table-column
-          show-overflow-tooltip
+          width="85"
           align="center"
           prop="initialPasswordStatus"
           label="密码状态">
           <template slot-scope="scope">
-            <el-tag size="medium" v-if="scope.row.initialPasswordStatus==true" type="danger">初始密码</el-tag>
-            <el-tag size="medium" v-if="scope.row.initialPasswordStatus==false" type="success">已变更</el-tag>
+            <el-tag v-if="scope.row.initialPasswordStatus==true" type="danger">初始密码</el-tag>
+            <el-tag v-if="scope.row.initialPasswordStatus==false" type="success">已变更</el-tag>
           </template>
         </el-table-column>
         <el-table-column
+          width="70"
           show-overflow-tooltip
           prop="name"
           label="姓名">
         </el-table-column>
         <el-table-column
+          width="50"
           align="center"
           prop="sex"
           label="性别">
@@ -178,7 +180,7 @@
         },
         data() {
             return {
-                disabled:true,//用于批量删除和批量角色分配按钮的可用性属性，只有当选择了复选框时才可以操作
+                disabled:true,//用于批量操作等按钮的可用性属性，只有当选择了复选框时才可以操作
                 table:{// 记录表格数据
                     tableData: [],//表格记录
                     // 分页-传递到服务端的数值

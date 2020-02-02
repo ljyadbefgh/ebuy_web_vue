@@ -116,6 +116,19 @@ export default new Router({
           ]
         },
         {//二级
+          path: 'productorder',
+          name:'订单模块',
+          redirect:'/admin/productorder/ProductOrderManage',
+          component: MyLayer,
+          children:[ // 使用 children 属性，实现子路由，同时，子路由的 path 前面，不要带 / ，否则永远以根路径开始请求，这样不方便我们用户去理解URL地址
+            {
+              path: 'ProductOrderManage',
+              name:'订单管理',
+              component: () => import("@/views/productorder/ProductOrderManage.vue")
+            }
+          ]
+        },
+        {//二级
           path: 'error',//错误页面
           name:'错误页面',
           redirect:'/admin/error/CustomerManage',
