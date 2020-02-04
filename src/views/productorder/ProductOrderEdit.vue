@@ -19,8 +19,10 @@
       <el-form-item label="总价">
         <el-input  v-model="form.totalPrice" :disabled="true"></el-input>
       </el-form-item>
-      <el-form-item label="成交价格" prop="strikePrice">
-        <el-input v-model="form.strikePrice"></el-input>
+      <el-form-item label="成交价格" prop="strikePrice" >
+        <el-tooltip content="如果要取消成交价，则设置为0" placement="bottom" effect="light">
+          <el-input v-model="form.strikePrice"  placeholder="如果要取消成交价，则设置为0"></el-input>
+        </el-tooltip>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer" align="center">
@@ -54,7 +56,7 @@
                 },
                 rules: {
                     strikePrice: [
-                        { validator: this.myMethod.elementRules.validateFloat},//自定义正浮点数的验证
+                        { validator: this.myMethod.elementRules.validateFloat,required:true}//自定义正浮,点数的验证
                     ]
                 }
             }
@@ -66,7 +68,7 @@
                 //初始化要修改的信息，注意不能直接等于对象，否则会直接修改对象的值
                 if(this.productOrder!=null){
                     this.form=Object.assign(this.form,  this.productOrder);//简化，直接拷贝值，注意，不能直接this.form=this.productOrder，造成引用地址的变化
-                   /* this.form.orderNo=this.productOrder.orderNo;
+                    /* this.form.orderNo=this.productOrder.orderNo;
                     this.form.sendName=this.productOrder.sendName;
                     this.form.sendAddress=this.productOrder.sendAddress;
                     this.form.sendZip=this.productOrder.sendZip;
@@ -94,7 +96,7 @@
                                         message: "订单已经成功修改"
                                     });
                                     //对表格的数据进行不刷新变更
-                                    this.productOrder=Object.assign(this.productOrder,  this.form);//简化，直接拷贝值，注意，不能直接this.productOrder=this.form，
+                                    this.productOrder=Object.assign(this.productOrder,msg.data);//简化，直接拷贝值，注意，不能直接this.productOrder=this.form，
                                     //this.productOrder.strikePrice=this.form.strikePrice;//设置当前订单成交价
                                     this.$refs[formName].resetFields();//重置表单
                                     this.closeDialog();//关闭对话框

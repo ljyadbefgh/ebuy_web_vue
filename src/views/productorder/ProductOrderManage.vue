@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!--表格-->
     <div class="item">
       <div class="item">
         <!--搜索栏-->
@@ -38,8 +37,8 @@
         </el-table-column>
         <!--订单子列表，嵌套表格。上面-->
         <!--订单列表-->
-        <el-table-column type="selection" width="45" align="center">
-        </el-table-column>
+       <!-- <el-table-column type="selection" width="45" align="center">
+        </el-table-column>-->
         <el-table-column
           show-overflow-tooltip
           prop="orderNo"
@@ -69,7 +68,6 @@
           width="70"
           show-overflow-tooltip
           align="center"
-          prop="payment"
           label="付款方式">
           <template slot-scope="scope">
             <template v-if="scope.row.paymentType==1">网上支付</template>
@@ -80,7 +78,6 @@
           width="70"
           show-overflow-tooltip
           align="center"
-          prop="payment"
           label="支付状态">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.paymentStatus==0" type="danger">未付款</el-tag>
@@ -114,9 +111,9 @@
               <el-button>请选择操作<i class="el-icon-arrow-down el-icon--right"></i></el-button>
               <el-dropdown-menu>
                <!-- <el-dropdown-item  command="editSend" :disabled="scope.row.tag!=1">更改收件信息</el-dropdown-item>-->
-                <el-dropdown-item   v-if="scope.row.tag==1" command="editStrikePrice">修改订单信息</el-dropdown-item>
+                <el-dropdown-item  command="editStrikePrice">修改订单信息</el-dropdown-item>
                 <el-dropdown-item  v-if="scope.row.tag==1"  command="editMerchantShipped">已发送货物</el-dropdown-item>
-                <el-dropdown-item v-if="scope.row.paymentStatus=1&&scope.row.tag==3"   command="editPayment">已收到钱款</el-dropdown-item>
+                <el-dropdown-item v-if="scope.row.paymentStatus==1&&scope.row.tag==3"   command="editPayment">已收到钱款</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <!--<el-button  @click="editProductOrder(scope.row)" type="primary" plain  icon="el-icon-edit">变更订单</el-button>-->
@@ -163,7 +160,7 @@
     export default {
         name: "ProductOrderManage",
         components: {
-            ProductOrderSearch: () => import("@/views/productorder/ProductOrderSearch.vue"),//引入产品高级查询表单
+            ProductOrderSearch: () => import("@/views/productorder/ProductOrderSearch.vue"),//引入产品订单高级查询表单
             ProductOrderDetailManageByProductOrder: () => import("@/views/productorder/ProductOrderDetailManageByProductOrder.vue"),//引入子订单列表
             ProductOrderEdit: () => import("@/views/productorder/ProductOrderEdit.vue") //引入子订单编辑表单
         },
@@ -181,17 +178,29 @@
                 },
                 productOrder:null, //获取当前行,订单的详细记录。
                 multipleSelection:[],//复选框选择的记录row
-                productOrderQuery:{//查询条件
-                    'orderNo': null,//订单号
-                    paymentType:'', //付款方式
-                    paymentStatus:'',// 支付状态
-                    tag:''//订单状态
-                }
+                productOrderQuery:{} // 查询条件，这里通过方法实现属性赋值，避免在清空时因为地址改变导致部分组件的绑定值出问题
             }
         },
         methods:{
+            initQuery(){//初始化查询条件
+                this.$set(this.productOrderQuery,'orderNo','');//订单号
+                this.$set(this.productOrderQuery,'paymentType','');//付款方式
+                this.$set(this.productOrderQuery,'paymentStatus','');// 支付状态
+                this.$set(this.productOrderQuery,'tag','');//订单状态
+                this.$set(this.productOrderQuery,'customerId','');;//客户id
+                this.$set(this.productOrderQuery,'sendName','');//发货人姓名
+                this.$set(this.productOrderQuery,'createTimeQueryOfBegin','');//下单开始时间
+                this.$set(this.productOrderQuery,'createTimeQueryOfEnd','');//下单结束时间
+                this.$set(this.productOrderQuery,'dealTimeQueryOfBegin','');//付款开始时间
+                this.$set(this.productOrderQuery,'dealTimeQueryOfEnd','');//付款结束时间
+                this.$set(this.productOrderQuery,'sendTimeQueryOfBegin','');//发货开始时间
+                this.$set(this.productOrderQuery,'sendTimeQueryOfEnd','');//发货结束时间
+                this.$set(this.productOrderQuery,'receiveTimeQueryOfBegin','');//收货开始时间
+                this.$set(this.productOrderQuery,'receiveTimeQueryOfEnd','');//收货结束时间
+            },
             clearQuery(){// 清空查询条件。原因在于使用pro传递查询条件到子组件，子组件直接清空会显示不能修改，但是不想双向绑定，也不想使用vuex，因此在这里进行处理
-                this.productOrderQuery={}
+                this.initQuery();
+                //this.productOrderQuery={};
             },
             getTableData() {//从服务端读取表格列表
                 this.$axios
@@ -202,7 +211,17 @@
                             orderNo:this.productOrderQuery.orderNo,
                             paymentType:this.productOrderQuery.paymentType,
                             paymentStatus:this.productOrderQuery.paymentStatus,
-                            tag:this.productOrderQuery.tag
+                            tag:this.productOrderQuery.tag,
+                            'customer.id':this.productOrderQuery.customerId,
+                            sendName:this.productOrderQuery.sendName,
+                            createTimeQueryOfBegin:this.productOrderQuery.createTimeQueryOfBegin,
+                            createTimeQueryOfEnd:this.productOrderQuery.createTimeQueryOfEnd,
+                            dealTimeQueryOfBegin:this.productOrderQuery.dealTimeQueryOfBegin,
+                            dealTimeQueryOfEnd:this.productOrderQuery.dealTimeQueryOfEnd,
+                            sendTimeQueryOfBegin:this.productOrderQuery.sendTimeQueryOfBegin,
+                            sendTimeQueryOfEnd:this.productOrderQuery.sendTimeQueryOfEnd,
+                            receiveTimeQueryOfBegin:this.productOrderQuery.receiveTimeQueryOfBegin,
+                            receiveTimeQueryOfEnd:this.productOrderQuery.receiveTimeQueryOfEnd
                         }
                     })
                     .then(response => {//获取返回数据
@@ -304,7 +323,8 @@
             }
         },
         mounted() {
-            this.getTableData();
+            this.initQuery();//初始化查询数据
+            this.getTableData();//初始化表格数据
         }
     }
 </script>

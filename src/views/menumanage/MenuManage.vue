@@ -26,6 +26,8 @@
         label="资源地址">
       </el-table-column>
       <el-table-column
+        width="75"
+        align="center"
         prop="enabled"
         label="是否可用">
         <template slot-scope="scope">
@@ -74,7 +76,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        width="50"
+        width="60"
         align="center"
         prop="requireAuth"
         label="显示">

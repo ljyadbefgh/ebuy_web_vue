@@ -74,7 +74,7 @@
             value: {//获取从父组件传递过来的当前选择的值
 /*                type: Number,*/
                 default() {
-                    return null;//必须设置为null，否则watch观察会出现偏差
+                    return null;
                 }
             }
         },

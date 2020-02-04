@@ -125,7 +125,6 @@
                         })
                         //获取失败
                         .catch(error=>{
-                            console.log(error);
                             console.log('网络错误，不能访问');
                         });
 

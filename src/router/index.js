@@ -125,6 +125,11 @@ export default new Router({
               path: 'ProductOrderManage',
               name:'订单管理',
               component: () => import("@/views/productorder/ProductOrderManage.vue")
+            },
+            {
+              path: 'ProductOrderDetailManage',
+              name:'订单管理',
+              component: () => import("@/views/productorderdetail/ProductOrderDetailManage.vue")
             }
           ]
         },

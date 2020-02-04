@@ -21,7 +21,7 @@ axios.defaults.headers ={
 //ljy特别说明：在和服务端交互时，服务端会返回客户端set-cookie那一行有path=/ebuy，说明这个cookie是有范围限制的，只能在/ebuy才会带上cookie
 // 所以如果使用proxyTable代理要注意这个问题，虚拟目录必须和服务端项目的地址一致
 // 给axios设置baseURL，用于开发模式调用
-//axios.defaults.baseURL = ' http://localhost:8081';
+axios.defaults.baseURL = ' http://120.76.118.101:8081';
 axios.defaults.withCredentials=true;  // 跨域携带cookie
 
 // import './styles/index.scss'
@@ -36,6 +36,9 @@ import store from "./vuex/store";
 
 //阻止显示生产模式的消息
 Vue.config.productionTip = false
+
+import {message} from "@/api/my/my_reset_element_message.js";
+Vue.prototype.$message=message;//重写element ui的$message指令，让消息框只显示一次。
 
 // 调用自定义的公共函数
 import myMethod from './api/my/my_common_methods'

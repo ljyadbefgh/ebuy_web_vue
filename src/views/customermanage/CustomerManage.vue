@@ -101,7 +101,9 @@
           label="地址">
         </el-table-column>
         <el-table-column
+          width="70"
           show-overflow-tooltip
+          align="center"
           prop="zip"
           label="邮编">
         </el-table-column>
@@ -109,6 +111,13 @@
           show-overflow-tooltip
           prop="email"
           label="邮箱">
+        </el-table-column>
+        <el-table-column
+          width="60"
+          align="center"
+          show-overflow-tooltip
+          prop="productOrderNumber"
+          label="订单数">
         </el-table-column>
         <el-table-column
           show-overflow-tooltip

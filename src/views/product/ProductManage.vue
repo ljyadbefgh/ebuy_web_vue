@@ -96,6 +96,18 @@
           label="人气">
         </el-table-column>
         <el-table-column
+          width="80"
+          align="center"
+          prop="productOrderDetailNumber"
+          label="订单数">
+        </el-table-column>
+        <el-table-column
+          width="80"
+          align="center"
+          prop="salesVolume"
+          label="销量">
+        </el-table-column>
+        <el-table-column
           width="70"
           align="center"
           prop="onSale"
