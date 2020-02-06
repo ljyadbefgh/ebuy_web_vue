@@ -4,16 +4,16 @@
       <el-form-item label="订单编号">
         <el-input  v-model="form.orderNo" :disabled="true"></el-input>
       </el-form-item>
-      <el-form-item label="收货人">
+      <el-form-item label="收货人" prop="sendName">
         <el-input  v-model="form.sendName"></el-input>
       </el-form-item>
-      <el-form-item label="收货地址">
+      <el-form-item label="收货地址" prop="sendAddress">
         <el-input  v-model="form.sendAddress"></el-input>
       </el-form-item>
-      <el-form-item label="邮编">
+      <el-form-item label="邮编" prop="sendZip">
         <el-input  v-model="form.sendZip"></el-input>
       </el-form-item>
-      <el-form-item label="电话">
+      <el-form-item label="电话" prop="sendTel">
         <el-input  v-model="form.sendTel"></el-input>
       </el-form-item>
       <el-form-item label="总价">
@@ -55,6 +55,22 @@
                     strikePrice:''
                 },
                 rules: {
+                    sendName: [
+                        { required: true, message: '不能为空', trigger: 'blur' },
+                        {  max: 10, message: '不能超过10个字符', trigger: 'blur' }
+                    ],
+                    sendAddress: [
+                        { required: true, message: '不能为空', trigger: 'blur' },
+                        {  max: 50, message: '不能超过50个字符', trigger: 'blur' }
+                    ],
+                    sendZip: [
+                        { required: true, message: '不能为空', trigger: 'blur' },
+                        { pattern: /^[0-9]{6}$/, message: '请输入正确的邮编格式' }
+                    ],
+                    sendTel: [
+                        { required: true, message: '不能为空', trigger: 'blur' },
+                        { pattern: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/, message: '请输入正确的电子邮箱'}
+                    ],
                     strikePrice: [
                         { validator: this.myMethod.elementRules.validateFloat,required:true}//自定义正浮,点数的验证
                     ]

@@ -2,7 +2,7 @@
   <!--搜索栏-->
   <el-form :model="productQuery"  :inline="true" style="text-align: left;" class="demo-form-inline">
     <el-form-item >
-      <el-input v-model="productQuery.name" placeholder="产品类别名称"></el-input>
+      <el-input v-model="productQuery.name" placeholder="产品名称"></el-input>
     </el-form-item>
     <el-form-item  style="text-align: left;">
       <el-select-producttype v-model="productQuery.productTypeId"></el-select-producttype>

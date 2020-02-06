@@ -2,7 +2,7 @@
   <div>
     <!--搜索栏-->
     <el-form :model="productOrderDetailQuery"  :inline="true" style="text-align: left;" class="demo-form-inline">
-      <el-form-item >
+      <el-form-item  label="订单编号" align="left">
         <el-input v-model="productOrderDetailQuery.orderNo" placeholder="订单编号"></el-input>
       </el-form-item>
       <el-form-item label="产品" align="left">

@@ -37,7 +37,7 @@
                 },
                 rules: {
                     price: [
-                        { validator: this.myMethod.elementRules.validateFloat},//自定义正浮点数的验证
+                        { validator: this.myMethod.elementRules.validateFloat, required: true},//自定义正浮点数的验证
                     ],
                     productNumber: [
                         { required: true, message: '不能为空', trigger: 'blur' },

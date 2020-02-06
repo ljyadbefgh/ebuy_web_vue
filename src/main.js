@@ -11,6 +11,10 @@ import 'element-ui/lib/theme-chalk/index.css';
 //对element ui全局样式做改变，目前支持两个字段size用于改变组件的所有支持sezi组件的默认尺寸,设置弹框的初始 z-index（默认值：2000）
 Vue.use(ElementUI, { size: 'mini', zIndex: 3000 });
 
+// 引入echarts
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
+
 //引入axios
 import axios from "axios"
 
@@ -21,7 +25,7 @@ axios.defaults.headers ={
 //ljy特别说明：在和服务端交互时，服务端会返回客户端set-cookie那一行有path=/ebuy，说明这个cookie是有范围限制的，只能在/ebuy才会带上cookie
 // 所以如果使用proxyTable代理要注意这个问题，虚拟目录必须和服务端项目的地址一致
 // 给axios设置baseURL，用于开发模式调用
-axios.defaults.baseURL = ' http://120.76.118.101:8081';
+//axios.defaults.baseURL = ' http://120.76.118.101:8081';
 axios.defaults.withCredentials=true;  // 跨域携带cookie
 
 // import './styles/index.scss'

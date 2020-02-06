@@ -25,7 +25,7 @@ export default new Router({
     },
     {
       path: '/admin',
-      name:'后台首页',
+      name:'后台管理系统',
       component: Index,
       children:[ // 使用 children 属性，实现子路由，同时，子路由的 path 前面，不要带 / ，否则永远以根路径开始请求，这样不方便我们用户去理解URL地址
         {

@@ -1,94 +1,75 @@
 <template>
+  <!--style="background-color: #f0f2f5;"-->
   <div class="index">
-    <el-card class="box-card" style="text-align:left;">
-      <div slot="header" class="clearfix">
-        <span>默认后台管理页面首页-账户信息</span>
-        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
-      </div>
-      <div class="text item">
-        账户名:{{admin.username}}
-      </div>
-      <div class="text item">
-        姓名:{{admin.name}}
-      </div>
-      <div class="text item">
-        性别:
-        <template v-if="admin.sex==1">
-          男
-        </template>
-        <template v-else>
-          女
-        </template>
-      </div>
-      <div class="text item tag-group">
-        角色数量:
-        <!--<template v-for="role in admin.roles">
-          <el-tag style="margin-right: 5px;">{{role.nameZH}}</el-tag>
-        </template>-->
-        <el-tag
-          style="margin-right: 5px;"
-          v-for="role in admin.roles"
-          :key="role.id"
-          type="primary"
-          effect="dark">
-          {{role.nameZH}}
-        </el-tag>
-      </div>
-      <div class="text item">
-        发布产品数量:{{admin.saveProductNumber}}
-      </div>
-      <div class="text item">
-        注册时间:{{admin.createTime}}
-      </div>
-    </el-card>
+    <el-row :gutter="20">
+      <el-col :span="6">
+        <div class="grid-content bg-purple">
+          <AdminCount/>
+        </div>
+      </el-col>
+      <el-col :span="6">
+        <div class="grid-content bg-purple">
+          <CustomerCount/>
+        </div>
+      </el-col>
+      <el-col :span="6">
+        <div class="grid-content bg-purple">
+          <ProductCount/>
+        </div>
+      </el-col>
+      <el-col :span="6">
+        <div class="grid-content bg-purple">
+          <ProductOrderCount/>
+        </div>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="20" style="margin-top: 20px;">
+      <el-col :span="14">
+        <ProductMaxSalesVolumeChart/>
+      </el-col>
+      <el-col :span="10">
+        <ProductTypeSaleChart/>
+      </el-col>
+    </el-row>
+
+    <el-row style="margin-top: 20px;">
+      <el-col :span="24">
+        <ProductTypeSalesVolumeOfRecentlyEveryDayChart/>
+      </el-col>
+    </el-row>
+
+
+
   </div>
 </template>
 
 <script>
     export default {
-        name: 'AdminInfomation',
+        name: 'Main',
+        components: {
+            AdminCount: () => import("@/views/main/AdminCount.vue"), //引入管理账户的统计组件
+            CustomerCount: () => import("@/views/main/CustomerCount.vue"), //引入客户账户的统计组件
+            ProductCount: () => import("@/views/main/ProductCount.vue"), //引入产品的统计组件
+            ProductOrderCount: () => import("@/views/main/ProductOrderCount.vue"), //引入产品订单的统计组件
+            ProductMaxSalesVolumeChart: () => import("@/views/main/ProductMaxSalesVolumeChart.vue"), //引入产品最大销量图表
+            ProductTypeSalesVolumeOfRecentlyEveryDayChart: () => import("@/views/main/ProductTypeSalesVolumeOfRecentlyEveryDayChart.vue"), //引入产品订单图表
+            ProductTypeSaleChart: () => import("@/views/main/ProductTypeSaleChart.vue") //引入各类型产品销售图表
+        },
         data() {
             return {
                 admin:{}
             }
         },
         methods:{
-            getMyAdmin() {//读取当前登陆的用户信息
-                let _this=this;
-                this.$axios
-                    .get("/api/backstage/admin")
-                    .then(response => {//获取返回数据
-                        let msg=response.data;
-                        if (msg.code === 0) {
-                            this.admin = msg.data;
-                            _this.$store.commit("setUeditorServerUrlWithCredentials",msg.JSESSIONID);//客户端的session对象保存下来，目前是用于ueditor
-                        }else{
-                            this.$message.error(msg.msg);
-                        }
-                    })
-            }
+
         },
         mounted() {
-            this.getMyAdmin();
+
         }
     }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .text {
-    font-size: 14px;
-  }
-
-  .item {
-    margin-bottom: 18px;
-  }
-  .clearfix:before,
-  .clearfix:after {
-    display: table;
-    content: "";
-  }
-  .clearfix:after {
-    clear: both
-  }
 </style>
