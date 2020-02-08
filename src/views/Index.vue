@@ -131,7 +131,7 @@
                 }
             },
             handleSelect(key, keyPath) {
-                console.log(key, keyPath);
+                //console.log(key, keyPath);
             },
             initMenus(){//获取用户的菜单信息
                 this.$axios.get('/api/backstage/admin/treeMenu')

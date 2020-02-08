@@ -11,6 +11,8 @@
         <el-input v-model="form.picUrl" clearable readonly style="width: 300px;"></el-input>
         <MyUeditor
           editorId="picUrlId"
+          :loading="ueditorLoading1"
+          @onChangeLoading="onchangeLoaddingOfImage"
           :config="picUrlConfig"
           editorType="image"
           @uploadPicUrl="uploadPicUrl"
@@ -57,6 +59,8 @@
           ref="contentUeditor"
           editorType="editor"
           editorId="contentId"
+          :loading="ueditorLoading2"
+          @onChangeLoading="onchangeLoaddingOfContent"
           :value="form.content"
           :config="contentConfig">
         </MyUeditor>
@@ -99,6 +103,8 @@
                     // initialFrameHeight: 800,
                     wordCount: true
                 },
+                ueditorLoading1:true,
+                ueditorLoading2:true,
                 form: {
                     productTypeId:null,
                     name: '',
@@ -160,6 +166,12 @@
             closed(){
                 this.$refs['form'].resetFields();//重置表单
                 this.$refs.contentUeditor.setContent("");//清空富文本的值
+            },
+            onchangeLoaddingOfImage(value){
+                this.ueditorLoading1=value;
+            },
+            onchangeLoaddingOfContent(value){
+                this.ueditorLoading2=value;
             },
             uploadPicUrl(picUrl){//当点击图片上传时调用，获取ueditor图片上传组件调用图片的地址
                 this.form.picUrl=picUrl;

@@ -167,7 +167,6 @@
                     .then(response => {//获取返回数据
                         let msg=response.data;
                         if (msg.code === 0) {
-                            console.log(msg.data);
                             let title="近"+this.dayNumber+"天各产品栏目的销量情况";
                             let xAxisData=msg.data.xaxisArray;//获取X坐标的值集合
                             //将服务端获取的值，结合图标的要求进行设置

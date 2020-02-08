@@ -12,7 +12,7 @@ module.exports = {
     //assetsPublicPath: './',
     assetsPublicPath: '/',
     proxyTable: { //只在生产模式下有效
-      '/api': {
+      /*'/api': {
         //target: process.env.NODE_ENV === 'development'?'http://开发环境':'http://非开发环境',
         //target: 'http://120.76.118.101:8081/', //远程访问的服务器域名
         target: 'http://localhost:8081/', //远程访问的服务器域名
@@ -21,7 +21,7 @@ module.exports = {
         pathRewrite: {//重写路径，其实这里就是和上面的target拼接起来
           '^/api': '/api'//这里理解成用‘/api’代替target里面的地址，后面组件中我们掉接口时直接用api代替 比如我要调用'http://40.00.100.100:3002/user/add'，直接写‘/api/user/add’即可
         }
-      }
+      }*/
     },
 
     // Various Dev Server settings
@@ -56,13 +56,14 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    //assetsPublicPath: '/',//注意：生产环境下使用
+    assetsPublicPath: './',//注意：打包成产品时使用
 
     /**
      * Source Maps
      */
 
-    productionSourceMap: true,
+    productionSourceMap: false,//ljy:将productionSourceMap 的值设置为false. 再次打包就可以看到项目文件中已经没有map文件，文件减少
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 

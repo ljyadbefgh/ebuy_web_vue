@@ -12,6 +12,8 @@
         <MyUeditor
           editorId="picUrlIdEdit"
           :config="picUrlConfig"
+          :loading="ueditorLoading1"
+          @onChangeLoading="onchangeLoaddingOfImage"
           editorType="image"
           @uploadPicUrl="uploadPicUrl"
         >
@@ -57,6 +59,8 @@
           ref="contentUeditor"
           editorType="editor"
           editorId="contentIdEdit"
+          :loading="ueditorLoading2"
+          @onChangeLoading="onchangeLoaddingOfContent"
           :value="form.content"
           :config="contentConfig">
         </MyUeditor>
@@ -101,6 +105,8 @@
                     // initialFrameHeight: 800,
                     wordCount: true
                 },
+                ueditorLoading1:true,
+                ueditorLoading2:true,
                 form: {// 这里必须初始化所有属性，否则后面用form=msg.data，因为form地址的变化，会导致产品栏目下拉框无法监听
                     productTypeId:null,
                     name: '',
@@ -178,6 +184,12 @@
             closed(){
                 this.$refs['form'].resetFields();//重置表单
                 this.$refs.contentUeditor.setContent("");//清空富文本的值
+            },
+            onchangeLoaddingOfImage(value){
+                this.ueditorLoading1=value;
+            },
+            onchangeLoaddingOfContent(value){
+                this.ueditorLoading2=value;
             },
             uploadPicUrl(picUrl){//当点击图片上传时调用，获取ueditor图片上传组件调用图片的地址
                 this.form.picUrl=picUrl;

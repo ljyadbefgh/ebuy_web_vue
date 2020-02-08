@@ -13,6 +13,7 @@ Vue.component('MyUeditor',MyUeditor)// 注册为全局组件
 Vue.use(Router)
 
 export default new Router({
+  mode:'history',
   routes: [
     {
       path: '/',

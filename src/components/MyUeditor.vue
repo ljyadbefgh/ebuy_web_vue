@@ -1,10 +1,10 @@
 <template>
-  <div style="display: inline;">
+  <div style="display: inline;" v-loading="loading">
     <template v-if="editorType=='image'">
        <el-button :id="editorId" @click="openImageDialog">上传图片</el-button>
     </template>
     <template v-else>
-      <textarea :id="editorId" type="text/plain" style="width:100%;height:800px;"></textarea>
+      <textarea :id="editorId" type="text/plain" style="width:100%;height:800px;" ></textarea>
     </template>
 
   </div>
@@ -16,7 +16,7 @@
     import '../../static/plugins/ueditor/ueditor.config.js'
     import '../../static/plugins/ueditor/ueditor.all.min.js'
     import '../../static/plugins/ueditor/lang/zh-cn/zh-cn.js'
-    // import '../../static/plugins/ueditor/ueditor.parse.js'
+    import '../../static/plugins/ueditor/ueditor.parse.js'
 
     /**
      * ljy于20200130完成的ueditor组件，可以实现富文本和图片上传组件功能
@@ -56,6 +56,9 @@
             editorType:{// 使用编辑器的类型。当前设计有两种：image表示上传图片组件，editor表示富文本编辑器
                 type:String
             },
+            loading:{ //对应加载，false表示不加载
+                default: false,//默认不加载
+            },
             ueditorConfig: {//获取从父组件传递过来的ueditor的配置
                 type: Object,
                 default () {
@@ -71,14 +74,31 @@
         },
         data() {
             return {
-               ueditor:null, // 编辑器实例
+               ueditor:null // 编辑器实例
             }
         },
+       /* computed: {
+            editorLoading: {//通过这里绑定父组件传递过来的值，双向绑定，避免组件传值的警告
+                get: function() { //通过这里获取父组件传递过来的值
+                    console.log("get:"+this.loading);
+                    //console.log("get:"+this.value);
+                    return this.loading;
+                },
+                set: function(value) {//如果productTypeId获得新的值。
+                    console.log("set:"+value);
+                    this.$emit("onChangeLoading",value);// 则传递给父组件。机制学习：computed这里的值变化后，watch就会监听到
+                }
+            }
+        },*/
         methods:{
             setContent(value){ //给富文本内容赋值
                 let _this=this;
                 //对编辑器的操作最好在编辑器ready之后再做
                 this.ueditor.ready(function() {
+                    _this.$nextTick(()=>{//目的，等this.productTypeId被清空完成再执行搜索。因为是双向绑定的值，通过compute调用，如果不用this.$nextTick，这里会出现时间差，即已经按照原来的值搜索完得到结果，才会清空原来的值。
+                        _this.$emit("onChangeLoading",false);
+                    });
+                    console.log(" this.editorLoading1:"+ _this.loading);
                     _this.ueditor.setContent(value);
                 });
             },
@@ -103,6 +123,10 @@
             setImageEditor(){//初始化图片上传插件，
                 let _this=this;
                 this.ueditor.ready(function(){
+                    _this.$nextTick(()=>{//目的，等this.productTypeId被清空完成再执行搜索。因为是双向绑定的值，通过compute调用，如果不用this.$nextTick，这里会出现时间差，即已经按照原来的值搜索完得到结果，才会清空原来的值。
+                        _this.$emit("onChangeLoading",false);
+                    });
+                    console.log(" this.editorLoading2:"+ _this.loading);
                     //myEditorImage.setDisabled();
                     _this.ueditor.hide();//隐藏UE框体
                     _this.ueditor.addListener('beforeInsertImage',function(t, arg){//监听插入图片动作，回调函数
@@ -128,6 +152,10 @@
                 let _this=this;
                 let editor=this.ueditor;//等于当前编辑器
                 editor.ready(function() {
+                    _this.$nextTick(()=>{//目的，等this.productTypeId被清空完成再执行搜索。因为是双向绑定的值，通过compute调用，如果不用this.$nextTick，这里会出现时间差，即已经按照原来的值搜索完得到结果，才会清空原来的值。
+                        _this.$emit("onChangeLoading",false);
+                    });
+                    console.log(" this.editorLoading3:"+ _this.loading);
                     editor.setContent(val);
                 });
 
@@ -139,9 +167,11 @@
             }
         },
         mounted() {
+            this.editorLoading=true;//加载架构
             let config={//原始配置，必须存在
                 zIndex:5000,//element的dialog默认是2000，这里应该至少在2000以上。经过测试5000比较稳妥，3000也出现过问题
                 serverUrl:this.$store.getters.ueditorServerUrlWithCredentials//必须手动设置，因为uedidot.config.js中保存的地址只会读取一次
+                //UEDITOR_HOME_URL:'static/plugins/ueditor/' //放置文件的目录
             };
             this.ueditorConfig=Object.assign(this.ueditorConfig, config);//将配置信息合并。合并对象的值（如果对象本身存在的属性会更新,不存在的属性会增加。注意根据业务场合，这里可以用），不能直接对象引用，否则无法更改表格原来的数据
             this.ueditor= UE.getEditor(this.editorId,this.ueditorConfig);//根据id，初始化富文本。必须：否则一个父组件只能初始化一个Ueditor。
