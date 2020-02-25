@@ -51,13 +51,13 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
+    index: path.resolve(__dirname, '../ebuy_web_vue/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsRoot: path.resolve(__dirname, '../ebuy_web_vue'),
     assetsSubDirectory: 'static',
     //assetsPublicPath: '/',//注意：生产环境下使用
-    assetsPublicPath: './',//注意：打包成产品时使用
+    assetsPublicPath: '/ebuy_web_vue/',//注意：打包成产品时使用。这个地方使用绝对路径
 
     /**
      * Source Maps

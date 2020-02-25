@@ -217,6 +217,7 @@
                             page: this.table.page,
                             limit: this.table.limit,
                             username:this.customerQuery.username,
+                            name:this.customerQuery.name,
                             sex:this.customerQuery.sex,
                             changeInitialPassword:this.customerQuery.changeInitialPassword,
                             uploadPhoto:this.customerQuery.uploadPhoto

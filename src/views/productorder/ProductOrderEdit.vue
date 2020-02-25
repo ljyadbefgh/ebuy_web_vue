@@ -68,8 +68,7 @@
                         { pattern: /^[0-9]{6}$/, message: '请输入正确的邮编格式' }
                     ],
                     sendTel: [
-                        { required: true, message: '不能为空', trigger: 'blur' },
-                        { pattern: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/, message: '请输入正确的电子邮箱'}
+                        { pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号码'},
                     ],
                     strikePrice: [
                         { validator: this.myMethod.elementRules.validateFloat,required:true}//自定义正浮,点数的验证

@@ -106,7 +106,7 @@
                             .post("/api/backstage/adminmanage",JSON.stringify(this.adminForm))
                             .then(response => {//获取返回数据
                                 let msg=response.data;
-                                if (msg.code === 0) {//如果修改成功
+                                if (msg.code === 0) {//如果提交成功
                                     this.$message({
                                         type: "success",
                                         message: msg.msg

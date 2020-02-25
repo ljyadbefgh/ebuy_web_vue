@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="头像上传" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="500px" @opened="opened" @closed="closed">
+  <el-dialog title="头像上传"  align="center" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="500px" @opened="opened" @closed="closed">
 
     <img v-if="imageUrl!=null&&imageUrl!=''" :src="imageUrl"  style="height:180px;min-width:120px;">
     <img v-else :src="myVariable.pic.noPicSrc"  style="height:180px;min-width:120px;">

@@ -6,7 +6,7 @@
       <i class="el-icon-s-custom" style="float:left;font-size: 70px;"></i>
       <div  style="float:right;margin-top: 5px;">
         <div>
-          <span style="color:#fff;font-size: 16px;font-weight: bold;">管理账户数</span>
+          <span style="color:#fff;font-size: 16px;font-weight: bold;">客户账户数</span>
         </div>
         <div style="margin-top:10px;">
           <span style="color:#fff;font-size: 20px;">{{number}}</span>

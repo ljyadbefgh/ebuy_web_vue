@@ -113,7 +113,7 @@
                <!-- <el-dropdown-item  command="editSend" :disabled="scope.row.tag!=1">更改收件信息</el-dropdown-item>-->
                 <el-dropdown-item  command="editStrikePrice">修改订单信息</el-dropdown-item>
                 <el-dropdown-item  v-if="scope.row.tag==1"  command="editMerchantShipped">已发送货物</el-dropdown-item>
-                <el-dropdown-item v-if="scope.row.paymentStatus==1&&scope.row.tag==3"   command="editPayment">已收到钱款</el-dropdown-item>
+                <!--<el-dropdown-item v-if="scope.row.paymentStatus==1&&scope.row.tag==3"   command="editPayment">已收到钱款</el-dropdown-item>-->
               </el-dropdown-menu>
             </el-dropdown>
             <!--<el-button  @click="editProductOrder(scope.row)" type="primary" plain  icon="el-icon-edit">变更订单</el-button>-->

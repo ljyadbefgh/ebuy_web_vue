@@ -13,7 +13,8 @@ Vue.component('MyUeditor',MyUeditor)// 注册为全局组件
 Vue.use(Router)
 
 export default new Router({
-  mode:'history',
+ /* mode:'history',*/
+  base:'ebuy_web_vue',
   routes: [
     {
       path: '/',
@@ -23,6 +24,11 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/chart',
+      name: 'chart',
+      component:  () => import("@/views/Chart")
     },
     {
       path: '/admin',
@@ -131,6 +137,19 @@ export default new Router({
               path: 'ProductOrderDetailManage',
               name:'订单管理',
               component: () => import("@/views/productorderdetail/ProductOrderDetailManage.vue")
+            }
+          ]
+        },
+        {//二级
+          path: 'config',//客户管理
+          name:'系统设置',
+          redirect:'/admin/config/ConfigEdit',
+          component: MyLayer,
+          children:[ // 使用 children 属性，实现子路由，同时，子路由的 path 前面，不要带 / ，否则永远以根路径开始请求，这样不方便我们用户去理解URL地址
+            {
+              path: 'ConfigEdit',
+              name:'基础信息设置',
+              component: () => import("@/views/config/ConfigEdit.vue")
             }
           ]
         },
