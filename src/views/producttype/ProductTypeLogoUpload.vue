@@ -14,6 +14,7 @@
       :on-success="uploadSuccess"
       :show-file-list="true"
       :limit="1"
+      :with-credentials="true"
       :auto-upload="false">
       <el-button slot="trigger" size="small" type="primary">选取图片</el-button>
       <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传头像</el-button>
@@ -38,9 +39,9 @@
         methods: {
             openDialog(id) {//打开对话框
                 this.dialogFormVisible = true;
-                this.action="api/backstage/producttype/uploadPhoto/"+id;//定义上传头像的地址
+                this.action=this.myVariable.baseUrl+"/api/backstage/producttype/uploadPhoto/"+id;//定义上传头像的地址
                 this.$axios
-                    .get("api/backstage/producttype/"+id)
+                    .get("/api/backstage/producttype/"+id)
                     .then(response => {//获取返回数据/
                         let msg=response.data;
                         if (msg.code === 0) {

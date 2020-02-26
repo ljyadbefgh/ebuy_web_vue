@@ -1,8 +1,9 @@
 <template>
   <div>
-    <el-form :model="form" :rules="rules"  ref="form" label-width="150px">
+    <el-form :model="form" :rules="rules"  ref="form" label-width="250px">
+      <el-divider content-position="center">客户模块设置</el-divider>
       <el-form-item label="客户邀请码" prop="inviteCodeOfCustomer" align="left" >
-        <el-input v-model="form.inviteCodeOfCustomer"></el-input>
+        <el-input v-model="form.inviteCodeOfCustomer" placeholder="如果为空表示不需要邀请码"></el-input>
       </el-form-item>
       <el-form-item label="禁止客户注册"  prop="closeRegOfCustomer" align="left">
         <el-switch v-model="form.closeRegOfCustomer"></el-switch>
@@ -10,6 +11,17 @@
       <el-form-item label="禁止客户登陆"  prop="closeLoginOfCustomer" align="left">
       <el-switch v-model="form.closeLoginOfCustomer"></el-switch>
       </el-form-item>
+      <el-divider content-position="center">购物模块设置</el-divider>
+      <el-form-item label="单个商品最大购买数量" prop="maxSingleProductNumberByBuy" align="left" >
+        <el-input v-model="form.maxSingleProductNumberByBuy" placeholder="0表示不限制"></el-input>
+      </el-form-item>
+      <el-form-item label="购物车中商品种类的最大数量" prop="maxProductNumberInCart" align="left" >
+        <el-input v-model="form.maxProductNumberInCart" placeholder="0表示不限制"></el-input>
+      </el-form-item>
+      <el-form-item label="客户每天允许下单的最大次数" prop="maxProductOrderNumberInToday" align="left" >
+        <el-input v-model="form.maxProductOrderNumberInToday" placeholder="0表示不限制"></el-input>
+      </el-form-item>
+      <el-divider content-position="center">机器人设置</el-divider>
       <div style="text-align: center;">
         <el-button type="primary" round style="width: 90%;"  @click="submitForm('form')">修改</el-button>
       </div>

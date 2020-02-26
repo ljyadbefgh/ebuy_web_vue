@@ -141,15 +141,15 @@ export default new Router({
           ]
         },
         {//二级
-          path: 'config',//客户管理
+          path: 'webconfig',//客户管理
           name:'系统设置',
-          redirect:'/admin/config/ConfigEdit',
+          redirect:'/admin/webconfig/ConfigEdit',
           component: MyLayer,
           children:[ // 使用 children 属性，实现子路由，同时，子路由的 path 前面，不要带 / ，否则永远以根路径开始请求，这样不方便我们用户去理解URL地址
             {
-              path: 'ConfigEdit',
+              path: 'WebConfigEdit',
               name:'基础信息设置',
-              component: () => import("@/views/config/ConfigEdit.vue")
+              component: () => import("@/views/webconfig/WebConfigEdit.vue")
             }
           ]
         },

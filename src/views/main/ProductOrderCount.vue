@@ -30,7 +30,7 @@
         methods:{
             getData(){
                 this.$axios
-                    .get("/api/backstage/product/total")
+                    .get("/api/backstage/productorder/total")
                     .then(response => {//获取返回数据
                         let msg=response.data;
                         if (msg.code === 0) {
