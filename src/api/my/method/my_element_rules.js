@@ -10,7 +10,6 @@
  * 3.不能为附属
  */
 const validateFloat= (rule, value, callback) => {//小数的验证的验证规则
-  console.log(value);
   let reg = /^[+-]?(0|([1-9]\d*))(\.\d{0,2})?$/g;
   if (value == ''||value==null) {//如果值为空
     if(rule.required) {//如果规则要求必填

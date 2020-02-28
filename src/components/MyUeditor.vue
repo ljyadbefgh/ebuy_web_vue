@@ -1,11 +1,11 @@
 <template>
-  <div style="display: inline;" v-loading="loading">
-    <template v-if="editorType=='image'">
-       <el-button :id="editorId" @click="openImageDialog">上传图片</el-button>
-    </template>
-    <template v-else>
+  <div style="display: inline;">
+    <div style="display: inline;" v-loading.fullscreen.lock="loading" v-if="editorType=='image'" element-loading-text="部分插件第一次加载比较慢（主要是产品管理界面图片未加载完导致，请稍后">
+      <el-button :id="editorId" @click="openImageDialog">上传图片</el-button>
+    </div>
+    <div v-else  v-loading.fullscreen.lock="loading" element-loading-text="部分插件第一次加载比较慢（主要是产品管理界面图片未加载完导致），请稍后">
       <textarea :id="editorId" type="text/plain" style="width:100%;height:800px;" ></textarea>
-    </template>
+    </div>
 
   </div>
 </template>
@@ -20,6 +20,7 @@
 
     /**
      * ljy于20200130完成的ueditor组件，可以实现富文本和图片上传组件功能
+     * ljy与20200229再次修正ueditor组件，基本解决BUG，未发现存在问题
      * 使用说明：
      * 1.editorType
      * image表示上传图片组件，editor表示富文本编辑器。如果使用了image，则value属性无效
@@ -77,28 +78,20 @@
                ueditor:null // 编辑器实例
             }
         },
-       /* computed: {
-            editorLoading: {//通过这里绑定父组件传递过来的值，双向绑定，避免组件传值的警告
-                get: function() { //通过这里获取父组件传递过来的值
-                    console.log("get:"+this.loading);
-                    //console.log("get:"+this.value);
-                    return this.loading;
-                },
-                set: function(value) {//如果productTypeId获得新的值。
-                    console.log("set:"+value);
-                    this.$emit("onChangeLoading",value);// 则传递给父组件。机制学习：computed这里的值变化后，watch就会监听到
-                }
-            }
-        },*/
         methods:{
+            initContent(){ //给富文本初始化
+                let _this=this;
+                //对编辑器的操作最好在编辑器ready之后再做
+                this.ueditor.ready(function() {
+                    _this.$emit("onChangeLoading",false);
+                });
+            },
             setContent(value){ //给富文本内容赋值
                 let _this=this;
                 //对编辑器的操作最好在编辑器ready之后再做
                 this.ueditor.ready(function() {
-                    _this.$nextTick(()=>{//目的，等this.productTypeId被清空完成再执行搜索。因为是双向绑定的值，通过compute调用，如果不用this.$nextTick，这里会出现时间差，即已经按照原来的值搜索完得到结果，才会清空原来的值。
-                        _this.$emit("onChangeLoading",false);
-                    });
-                    console.log(" this.editorLoading1:"+ _this.loading);
+                    // console.log("富文本内容赋值");
+                    _this.$emit("onChangeLoading",false);
                     _this.ueditor.setContent(value);
                 });
             },
@@ -123,21 +116,23 @@
             setImageEditor(){//初始化图片上传插件，
                 let _this=this;
                 this.ueditor.ready(function(){
-                    _this.$nextTick(()=>{//目的，等this.productTypeId被清空完成再执行搜索。因为是双向绑定的值，通过compute调用，如果不用this.$nextTick，这里会出现时间差，即已经按照原来的值搜索完得到结果，才会清空原来的值。
-                        _this.$emit("onChangeLoading",false);
+                    // console.log("图片上传插件赋值");
+                    _this.$emit("onChangeLoading",false);
+                    _this.$nextTick(()=>{//让  _this.$emit("onChangeLoading",false);生效后再执行，否则这里会出现时间差
+                        // _this.$emit("onChangeLoading",false);
+                        _this.ueditor.hide();//隐藏UE框体
+                        _this.ueditor.addListener('beforeInsertImage',function(t, arg){//监听插入图片动作，回调函数
+                            //alert(arg[0].src);//arg就是上传图片的返回值，是个数组，如果上传多张图片，请遍历该值。
+                            //把图片地址赋值给页面input
+                            if(arg.length>1){
+                                _this.$message.error("只能选一张图片上传");
+                            }else{
+                                _this.$emit('uploadPicUrl',arg[0].src);//调用父组件的方法，将插入图片的值赋给父组件。arg[0].src表示第一张图片
+                            }
+                        });
                     });
-                    console.log(" this.editorLoading2:"+ _this.loading);
+                    //console.log(" this.editorLoading2:"+ _this.loading);
                     //myEditorImage.setDisabled();
-                    _this.ueditor.hide();//隐藏UE框体
-                    _this.ueditor.addListener('beforeInsertImage',function(t, arg){//监听插入图片动作，回调函数
-                        //alert(arg[0].src);//arg就是上传图片的返回值，是个数组，如果上传多张图片，请遍历该值。
-                        //把图片地址赋值给页面input
-                        if(arg.length>1){
-                            _this.$message.error("只能选一张图片上传");
-                        }else{
-                            _this.$emit('uploadPicUrl',arg[0].src);//调用父组件的方法，将插入图片的值赋给父组件。arg[0].src表示第一张图片
-                        }
-                    });
                 });
             },
             openImageDialog(){
@@ -148,43 +143,52 @@
         },
         watch: {
             //如果编辑器没加载好，value值已经准备好了，那这个监听无效。这个监听是用于编辑器已经准备好（即没刷新页面前，第二次即以后打开使用）
-            value: function(val, oldVal) {//检测富文本值的变化，主要用于开始的赋值。如果Ueditor加载好了，但是富文本的内容还没有异步读取到，这个时候通过监听，让编辑器读取加载好的富文本内容。
+            value: function(val, oldVal) {//检测富文本值的变化，主要用于开始的赋值。如果Ueditor加载好了，但是富文本的内容还没有异步读取到(指父组件中的异步读取数据)，这个时候通过监听，让编辑器读取加载好的富文本内容。
                 let _this=this;
                 let editor=this.ueditor;//等于当前编辑器
-                editor.ready(function() {
-                    _this.$nextTick(()=>{//目的，等this.productTypeId被清空完成再执行搜索。因为是双向绑定的值，通过compute调用，如果不用this.$nextTick，这里会出现时间差，即已经按照原来的值搜索完得到结果，才会清空原来的值。
-                        _this.$emit("onChangeLoading",false);
+                if(editor!=null){//后期加上，因为在mouted加上了ajax请求，导致这里的加载可能会在mouted加载编辑器以前，所以补上这个判断
+                    editor.ready(function() {
+                        //_this.$emit("onChangeLoading",false);
+                        editor.setContent(val);
                     });
-                    console.log(" this.editorLoading3:"+ _this.loading);
-                    editor.setContent(val);
-                });
-
-
-               /* if (val != null  && this.ready) {
-                    this.instance = UE.getEditor(this.randomId, this.ueditorConfig);
-                    this.instance.setContent(val);
-                }*/
+                }
             }
         },
         mounted() {
-            this.editorLoading=true;//加载架构
-            let config={//原始配置，必须存在
-                zIndex:5000,//element的dialog默认是2000，这里应该至少在2000以上。经过测试5000比较稳妥，3000也出现过问题
-                serverUrl:this.$store.getters.ueditorServerUrlWithCredentials//必须手动设置，因为uedidot.config.js中保存的地址只会读取一次
-                //UEDITOR_HOME_URL:'static/plugins/ueditor/' //放置文件的目录
-            };
-            this.ueditorConfig=Object.assign(this.ueditorConfig, config);//将配置信息合并。合并对象的值（如果对象本身存在的属性会更新,不存在的属性会增加。注意根据业务场合，这里可以用），不能直接对象引用，否则无法更改表格原来的数据
-            this.ueditor= UE.getEditor(this.editorId,this.ueditorConfig);//根据id，初始化富文本。必须：否则一个父组件只能初始化一个Ueditor。
-            if(this.editorType=='editor'){
-                //特别注意，下面是通过不断试验得出的方法，必须配合watch才能完美实现
-                if(this.value!=''){//特别注意，如果value不为空，如果有值传入，此时赋值。否则不赋值，避免初始化时和watch冲突。
-                    this.setContent(this.value);// 初始化文本框内容
-                }
-            }else if(this.editorType=='image'){
-                this.setImageEditor();//初始化插件
-            }else{//如果都没有，默认是富文本
-                this.setContent(this.value);// 初始化文本框内容
-            }
+            //读取服务器的JSESSIONID
+            this.$axios
+                .get("/api/backstage/sessionId")
+                .then(response => {//获取返回数据
+                    let msg=response.data;
+                    if (msg.code === 0) {//只有成功才保存
+                        this.$store.commit("setUeditorServerUrlWithCredentials",msg.data);//客户端的session对象保存下来
+                        this.$nextTick(() => {//必须加上，否则serverUrl可能无法加载到最新的session
+                            console.log("富文本初始化mounted:"+this.loading);
+                            let config={//原始配置，必须存在
+                                zIndex:5000,//element的dialog默认是2000，这里应该至少在2000以上。经过测试5000比较稳妥，3000也出现过问题
+                                serverUrl:this.$store.getters.ueditorServerUrlWithCredentials()//必须手动设置，因为uedidot.config.js中保存的地址只会读取一次
+                                //UEDITOR_HOME_URL:'static/plugins/ueditor/' //放置文件的目录
+                            };
+                            this.ueditorConfig=Object.assign(this.ueditorConfig, config);//将配置信息合并。合并对象的值（如果对象本身存在的属性会更新,不存在的属性会增加。注意根据业务场合，这里可以用），不能直接对象引用，否则无法更改表格原来的数据
+                            this.ueditor= UE.getEditor(this.editorId,this.ueditorConfig);//根据id，初始化富文本。必须：否则一个父组件只能初始化一个Ueditor。
+                            if(this.editorType=='editor'){
+                                console.log("富文本组件初始化:"+this.loading);
+                                //特别注意，下面是通过不断试验得出的方法，必须配合watch才能完美实现
+                                if(this.value!=''){//特别注意，如果value不为空，如果有值传入，此时赋值。否则不赋值，避免初始化时和watch冲突。
+                                    this.setContent(this.value);// 初始化文本框内容
+                                }else{
+                                    this.initContent(); //  仅仅初始化富文本
+                                }
+                            }else if(this.editorType=='image'){
+                                console.log("图片组件初始化:"+this.loading);
+                                this.setImageEditor();//初始化插件
+                            }else{//如果都没有，默认是富文本
+                                // this.setContent(this.value);// 初始化文本框内容
+                            }
+                        });
+
+                    }
+                });
         },
         beforeDestroy() {//销毁后，必须销毁，否则显示会有问题。加上代码后，第一次和切换路由后都能加载出来
             if(this.ueditor !== null && this.ueditor.destroy) {

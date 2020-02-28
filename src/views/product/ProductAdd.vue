@@ -10,6 +10,7 @@
       <el-form-item label="图片" prop="picUrl" align="left">
         <el-input v-model="form.picUrl" clearable readonly style="width: 300px;"></el-input>
         <MyUeditor
+          ref="pictureUeditor"
           editorId="picUrlId"
           :loading="ueditorLoading1"
           @onChangeLoading="onchangeLoaddingOfImage"

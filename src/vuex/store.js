@@ -21,7 +21,7 @@ const getters={
   routeMatched(state){
     return state.routeMatched;
   },
-  ueditorServerUrlWithCredentials(){//必须通过这个读取，否则刷新后会丢失
+  ueditorServerUrlWithCredentials:(state) => () =>{//必须通过方法级别读取（如：this.$store.getters.ueditorServerUrlWithCredentials()）读取，否则vuex会读取缓存，而不会执行该方法
     return myVariable.ueditorServerUrl+";jsessionid="+sessionStorage.getItem("JSESSIONID")+"?";
   }
 }

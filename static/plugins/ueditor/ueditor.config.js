@@ -23,7 +23,7 @@
     //var JSESSIONID=getSessionId();
     var URL = window.UEDITOR_HOME_URL || getUEBasePath();
     //var URL = getUEBasePath();
-    var JSESSIONID=sessionStorage.getItem("JSESSIONID");//获取session对象
+    //var JSESSIONID=sessionStorage.getItem("JSESSIONID");//获取session对象
     var server="http://127.0.0.1:8081/";//服务端的地址
     //var server="http://120.76.118.101:8080/ebuy_springboot/";//服务端的地址
    //console.log("session:"+JSESSIONID);

@@ -60,6 +60,16 @@ Vue.prototype.$axios = axios;
  * next: 调用该方法，才能进入下一个路由钩子
  */
 router.beforeEach((to, from, next) => {
+  //读取服务器的JSESSIONID
+/*  axios
+    .get("/api/backstage/sessionId")
+    .then(response => {//获取返回数据
+      let msg=response.data;
+      if (msg.code === 0) {//只有成功才保存
+        console.log(msg.data);
+        store.commit("setUeditorServerUrlWithCredentials",msg.data);//客户端的session对象保存下来
+      }
+    });*/
   //console.log(to.fullPath);// 获取当前路由的完整路径
   store.commit("setRouteMatched",to.matched);//将路由节点信息存入vuex，to.matched获取当前路由的每个路由节点的完整信息
   next(); //调用该方法,才能进入下一个钩子
