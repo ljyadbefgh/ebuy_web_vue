@@ -35,8 +35,8 @@
         //为编辑器实例添加一个路径，原生的，这个不能被注释
         //UEDITOR_HOME_URL: URL
         //下面为ljy根据ueditor在vue工程项目中的位置做的配置
-        //UEDITOR_HOME_URL: "/ebuy_web_vue/static/plugins/ueditor/"  //发布时候用，即在网站作为目录放在根目录下，如http://www.lcvc.cn/ebuy_web_vue访问
-        UEDITOR_HOME_URL: "/static/plugins/ueditor/"   //在本地运行时用，或是网站放在根目录下用。如http://www.lcvc.cn就可以访问
+        UEDITOR_HOME_URL: "/ebuy_web_vue/static/plugins/ueditor/"  //发布时候用，即在网站作为目录放在根目录下，如http://www.lcvc.cn/ebuy_web_vue访问
+        //UEDITOR_HOME_URL: "/static/plugins/ueditor/"   //在本地运行时用，或是网站放在根目录下用。如http://www.lcvc.cn就可以访问
 
         // 服务器统一请求接口路径
         //, serverUrl: URL + "jsp/controller.jsp"

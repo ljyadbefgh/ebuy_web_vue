@@ -74,12 +74,15 @@
                         { required: true, message: '请选择性别', trigger: 'change' }
                     ],
                     tel:[
+                        { required: true, message: '请输入手机号码', trigger: 'blur' },
                         { pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号码'},
                     ],
                     address: [
+                        { required: true, message: '请输入地址（用于送货）', trigger: 'blur' },
                         {  max: 50, message: '不能超过50个字符', trigger: 'blur' }
                     ],
                     zip: [
+                        { required: true, message: '请输入邮编（用于送货）', trigger: 'blur' },
                         { pattern: /^[0-9]{6}$/, message: '请输入正确的邮编格式' }
                     ],
                     email: [

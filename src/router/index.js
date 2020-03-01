@@ -150,6 +150,24 @@ export default new Router({
               path: 'WebConfigEdit',
               name:'基础信息设置',
               component: () => import("@/views/webconfig/WebConfigEdit.vue")
+            },
+            {
+              path: 'LogManage',
+              name:'日志管理',
+              redirect:'/admin/webconfig/LogManage/LogOfAdminLoginManage',
+              component: MyLayer,
+              children:[ // 使用 children 属性，实现子路由，同时，子路由的 path 前面，不要带 / ，否则永远以根路径开始请求，这样不方便我们用户去理解URL地址
+                {
+                  path: 'LogOfCustomerLoginManage',
+                  name:'客户登陆日志',
+                  component: () => import("@/views/log/LogOfCustomerLoginManage.vue")
+                },
+                {
+                  path: 'LogOfAdminLoginManage',
+                  name:'管理员登陆日志',
+                  component: () => import("@/views/log/LogOfAdminLoginManage.vue")
+                }
+                ]
             }
           ]
         },
