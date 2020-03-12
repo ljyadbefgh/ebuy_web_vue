@@ -9,7 +9,7 @@
           <el-input  show-password v-model="loginForm.password" autocomplete="off" ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">登陆</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')" :loading="loadingButton">登陆</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -20,6 +20,7 @@
         name: "Login",
         data() {
             return {
+                loadingButton:false,
                 loginForm: {
                     username: 'admin',
                     password: ''
@@ -41,7 +42,7 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {//如果验证通过
-                        let _this=this;//保留出发事件的this对象
+                        this.loadingButton=true;
                         this.$axios.get('/api/backstage/login',{
                             params:{
                                 username:this.loginForm.username,
@@ -52,24 +53,22 @@
                         .then(response=>{
                             let msg=response.data;//获取返回数据
                             if(msg.code==0){//如果登陆成功
-                                _this.$store.commit("save_admin",_this.loginForm.username);//将账户信息存入
+                                this.$store.commit("save_admin",this.loginForm.username);//将账户信息存入
                                 // _this.$store.commit("setUeditorServerUrlWithCredentials",msg.data);//客户端的session对象保存下来
-                                _this.$message({
+                                this.$message({
                                         message:'登陆成功',
                                         type:'success'
                                     });
-                                _this.$router.push('admin');
-                            }else{
-                                _this.$message.error(msg.msg);
+                                this.$router.push('admin');
+                            }else{//如果登陆失败
+                                this.loadingButton=false;
                             }
                         })
                         //获取失败
                         .catch(error=>{
-                            console.log(error);
-                            console.log('网络错误，不能访问');
+                            this.loadingButton=false;
                         });
                     } else {//如果客户端验证失败
-                        console.log('error submit!!');
                         return false;
                     }
                 });

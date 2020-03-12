@@ -1,5 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+//避免在当前目录下，又跳转当前目录，出现的警告信息
+const routerPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return routerPush.call(this, location).catch(error=> error)
+}
 
 //异步加载引入
 const Login = () => import("@/views/Login")
@@ -24,11 +29,6 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: Login
-    },
-    {
-      path: '/chart',
-      name: 'chart',
-      component:  () => import("@/views/Chart")
     },
     {
       path: '/admin',

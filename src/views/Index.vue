@@ -76,7 +76,7 @@
         <MyBreadcrumb></MyBreadcrumb>
 
 
-        <el-main>
+        <el-main class="loading-area">
           <router-view></router-view>
         </el-main>
       </el-container>
@@ -112,22 +112,15 @@
                     //then获取成功；response成功后的返回值（对象）
                         .then(response=>{
                             let msg=response.data;//获取返回数据
-                            if(msg.code==0){//如果爱护小成功
+                            if(msg.code==0){//如果注销成功
                                 this.$message({
                                     message:'成功注销',
                                     type:'success'
                                 });
                                 this.$store.commit("logout_admin");//将账户信息注销
                                 this.$router.push("/login");
-                            }else{
-                                _this.$message.error(msg.msg);
                             }
                         })
-                        //获取失败
-                        .catch(error=>{
-                            console.log('网络错误，不能访问');
-                        });
-
                 }
             },
             handleSelect(key, keyPath) {
@@ -139,14 +132,8 @@
                         let msg=response.data;//获取返回数据
                         if(msg.code==0){//如果登陆成功
                             this.menus=msg.data;
-                        }else{
-                            this.$message.error(msg.msg);
                         }
                     })
-                    //获取失败
-                    .catch(error=>{
-                        console.log(error);
-                    });
             }
         },
         mounted() {

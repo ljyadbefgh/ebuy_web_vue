@@ -23,6 +23,9 @@
       <el-form-item label="优先级" prop="orderNum" align="left">
         <el-select-orderNum v-model.number="form.orderNum" :orderNumOptions="orderNumOptions"></el-select-orderNum>
       </el-form-item>
+      <el-form-item label="推荐指数" prop="recommendation" align="left">
+        <el-rate v-model="form.recommendation" :max="5" show-score text-color="#ff9900"></el-rate>
+      </el-form-item>
       <el-form-item label="产品原价" prop="originalPrice">
         <el-input v-model="form.originalPrice"></el-input>
       </el-form-item>
@@ -69,7 +72,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取 消</el-button>
-      <el-button type="primary" @click="submitForm('form')">创建</el-button>
+      <el-button type="primary" @click="submitForm('form')" :loading="loading">创建</el-button>
     </div>
   </el-dialog>
 </template>
@@ -92,6 +95,7 @@
         data() {
             return {
                 dialogFormVisible: false,
+                loading:false,
                /* config: {
                     //serverUrl:this.myVariable.ueditorServerUrl+";jsessionid="+sessionStorage.getItem("JSESSIONID")+"?"
                     serverUrl:this.$store.getters.ueditorServerUrlWithCredentials//必须手动将值传过去，因为uedidot.config.js中保存的地址只会读取一次
@@ -106,19 +110,7 @@
                 },
                 ueditorLoading1:true,
                 ueditorLoading2:true,
-                form: {
-                    productTypeId:null,
-                    name: '',
-                    picUrl:'',
-                    orderNum:100,
-                    originalPrice:0.00,
-                    price:0.00,
-                    repository:0,
-                    click:0,
-                    onSale:'true',
-                    description:'',
-                    content:''
-                },
+                form: {},
                 rules: {
                     productTypeId: [
                         { required: true, message: '不能为空', trigger: 'blur' }
@@ -156,6 +148,7 @@
         },
         methods: {
             openDialog() {//打开对话框
+                this.initForm();//初始化表单
                 this.dialogFormVisible = true;
             },
             closeDialog() {//关闭对话框
@@ -175,11 +168,26 @@
                 this.ueditorLoading2=value;
             },
             uploadPicUrl(picUrl){//当点击图片上传时调用，获取ueditor图片上传组件调用图片的地址
-                this.form.picUrl=picUrl;
+                this.$set(this.form,'picUrl',picUrl);
+            },
+            initForm(){//初始化表单元素
+                this.$set(this.form,'productTypeId',null);
+                this.$set(this.form,'name','');
+                this.$set(this.form,'picUrl','');
+                this.$set(this.form,'orderNum','100');
+                this.$set(this.form,'recommendation',1);
+                this.$set(this.form,'originalPrice',0.00);
+                this.$set(this.form,'price',0.00);
+                this.$set(this.form,'repository',0);
+                this.$set(this.form,'click',0);
+                this.$set(this.form,'onSale','true');
+                this.$set(this.form,'description','');
+                this.$set(this.form,'content','');
             },
             submitForm(formName) {//提交表单事件
                 this.$refs[formName].validate((valid) => {
                     if (valid) {//如果验证通过
+                        this.loading=true;//加载状态
                         let productType ={//创建所属产品类别对象
                             id: this.form.productTypeId
                         };
@@ -189,19 +197,19 @@
                         this.$axios//将更新后的值传到服务端保存
                             .post("/api/backstage/product",JSON.stringify(this.form))
                             .then(response => {//获取返回数据
+                                this.loading=false;
                                 let msg=response.data;
                                 if (msg.code === 0) {//如果修改成功
                                     this.$message({
                                         type: "success",
                                         message: msg.msg
                                     });
+                                    this.initForm();//初始化表单元素
                                     this.$emit("tableRefresh");//刷新父组件的表格
-                                }else{//如果修改失败
-                                    this.$message.error(msg.msg);
                                 }
                             })
                             .catch(error => {
-
+                                this.loading=false;
                             });
                     } else {//如果验证不通过
                         return false;

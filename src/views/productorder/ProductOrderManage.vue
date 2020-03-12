@@ -90,6 +90,16 @@
           show-overflow-tooltip
           align="center"
           prop="tag"
+          label="物流状态">
+          <template  slot-scope="scope">
+            {{myVariable.orderDeliverStatusMap[scope.row.deliverStatus]}}
+          </template>
+        </el-table-column>
+        <el-table-column
+          width="70"
+          show-overflow-tooltip
+          align="center"
+          prop="tag"
           label="订单状态">
           <template  slot-scope="scope">
             {{myVariable.orderTagMap[scope.row.tag]}}
@@ -113,6 +123,8 @@
                <!-- <el-dropdown-item  command="editSend" :disabled="scope.row.tag!=1">更改收件信息</el-dropdown-item>-->
                 <el-dropdown-item  command="editStrikePrice">修改订单信息</el-dropdown-item>
                 <el-dropdown-item  v-if="scope.row.tag==1"  command="editMerchantShipped">已发送货物</el-dropdown-item>
+                <el-dropdown-item command="cancel" v-if="scope.row.tag==-1">取消订单</el-dropdown-item>
+                <el-dropdown-item command="voided" v-if="scope.row.tag>=0 && scope.row.tag<=2">订单作废</el-dropdown-item>
                 <!--<el-dropdown-item v-if="scope.row.paymentStatus==1&&scope.row.tag==3"   command="editPayment">已收到钱款</el-dropdown-item>-->
               </el-dropdown-menu>
             </el-dropdown>
@@ -229,12 +241,7 @@
                         if (msg.code === 0) {
                             this.table.tableData = msg.data;
                             this.table.total=msg.count;
-                        }else{
-                            this.$message.error(msg.msg);
                         }
-                    })
-                    .catch(error => {
-                        console.log(error);
                     });
             },
             handleCurrentChange(value) {//当分页插件的页码改变时触发，value表示前端分页点击的页码
@@ -267,6 +274,10 @@
                     this.editMerchantShipped(row.orderNo);
                 }else if(command=="editPayment"){//修改收件人信息
                     this.editPayment(row.orderNo);
+                }else if(command=="voided"){//订单作废
+                    this.voided(row.orderNo);
+                }else if(command=="cancel"){//订单取消
+                    this.cancel(row.orderNo);
                 }
             },
             editStrikePrice(row){//修改订单成交价
@@ -287,15 +298,58 @@
                             let msg=response.data;
                             if (msg.code === 0) {
                                 this.getTableData();// 刷新表格数据
-                            }else{
-                                this.$message.error(msg.msg);
                             }
-                        })
-                        .catch(error => {
-                            console.log(error);
                         });
                 }).catch(error => {//选择取消按钮后执行
                     //console.error(error);
+                });
+            },
+            voided(orderNo){ // 订单作废
+                this.$confirm(" 确定要将订单状态改为“作废”吗？", "系统提示", {
+                    confirmButtonText: "确定",//确定按钮的文本内容
+                    cancelButtonText: "取消",//取消按钮的文本内容
+                    type: "warning"
+                }).then(() => {//选择确认按钮后执行
+                    this.$axios
+                        .patch("/api/backstage/productorder/"+orderNo+"/voided")
+                        .then(response => {//获取返回数据
+                            let msg=response.data;
+                            if (msg.code === 0) {
+                                this.getTableData();// 刷新表格数据
+                            }
+                        });
+                }).catch(error => {//选择取消按钮后执行
+                    //console.error(error);
+                });
+            },
+            cancel(orderNo){ // 订单取消
+                this.$confirm(" 是否允许取消该订单吗？取消订单将可能退款给客户", "系统提示", {
+                    distinguishCancelAndClose: true,
+                    confirmButtonText: "允许",//确定按钮的文本内容
+                    cancelButtonText: "拒绝并恢复订单正常状态",//取消按钮的文本内容
+                    type: "warning"
+                }).then(() => {//选择确认按钮后执行
+                    this.$axios
+                        .patch("/api/backstage/productorder/"+orderNo+"/cancel")
+                        .then(response => {//获取返回数据
+                            let msg=response.data;
+                            if (msg.code === 0) {
+                                this.getTableData();// 刷新表格数据
+                            }
+                        });
+                }).catch(action  => {//选择取消按钮后执行
+                    if(action==='cancel'){//如果点击了取消按钮
+                        this.$axios
+                            .patch("/api/backstage/productorder/"+orderNo+"/rejectCancel")
+                            .then(response => {//获取返回数据
+                                let msg=response.data;
+                                if (msg.code === 0) {
+                                    this.getTableData();// 刷新表格数据
+                                }
+                            });
+                    }else if(action==='close'){//如果点击了关闭或ESC
+
+                    }
                 });
             },
             editPayment(orderNo){//修改订单状态
@@ -310,12 +364,7 @@
                             let msg=response.data;
                             if (msg.code === 0) {
                                 this.getTableData();// 刷新表格数据
-                            }else{
-                                this.$message.error(msg.msg);
                             }
-                        })
-                        .catch(error => {
-                            console.log(error);
                         });
                 }).catch(error => {//选择取消按钮后执行
                     //console.error(error);

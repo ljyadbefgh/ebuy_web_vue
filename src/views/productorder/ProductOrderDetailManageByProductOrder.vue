@@ -47,7 +47,7 @@
         align="center"
         width="150">
         <template slot-scope="scope">
-          <template v-if="productOrderRow.tag==0">
+          <template v-if="(productOrderRow.tag==0&&productOrderRow.paymentType==1)||(productOrderRow.tag==1&&productOrderRow.paymentType==2)">
             <el-button  @click="editProductOrderDetail(scope.row)" type="primary" plain>修改订单</el-button>
           </template>
           <template v-else>

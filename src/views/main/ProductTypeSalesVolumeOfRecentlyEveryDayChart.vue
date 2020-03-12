@@ -193,12 +193,7 @@
                                 seriesData.push(seriesDatum);
                             })
                             this.drawLine(title,xAxisData,seriesData,legendData);
-                        }else{
-                            this.$message.error(msg.msg);
                         }
-                    })
-                    .catch(error => {
-                        console.log(error);
                     });
             }
         },

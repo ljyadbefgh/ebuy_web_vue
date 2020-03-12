@@ -179,12 +179,7 @@
                                     //this.$refs[formName].resetFields();//重置表单。不会清空级联列表的值（但是会清空级联列表显示出来的Label值）
                                     this.resetForm();//手动重置表单的值，方便重复添加（如在同一菜单下添加多个子菜单）
                                     this.$emit("menuTableRefresh");//刷新父组件的表格
-                                }else{//如果修改失败
-                                    this.$message.error(msg.msg);
                                 }
-                            })
-                            .catch(error => {
-
                             });
                     } else {//如果验证不通过
                         return false;

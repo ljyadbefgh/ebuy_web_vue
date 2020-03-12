@@ -20,10 +20,10 @@ Vue.prototype.$echarts = echarts
 
 import store from "./vuex/store";
 
-
-
 //阻止显示生产模式的消息
 Vue.config.productionTip = false
+
+// import './styles/index.scss'
 
 import {message} from "@/api/my/my_reset_element_message.js";
 Vue.prototype.$message=message;//重写element ui的$message指令，让消息框只显示一次。
@@ -37,19 +37,8 @@ Vue.prototype.myVariable=myVariable;// 组件中通过this.myVariable.variable�
 
 
 //引入axios
-import axios from "axios"
-
-axios.defaults.headers ={
-  "Content-Type":"application/json;charset=UTF-8",
-  "Access-Control-Allow-Methods": "*"
-}
-//ljy特别说明：在和服务端交互时，服务端会返回客户端set-cookie那一行有path=/ebuy，说明这个cookie是有范围限制的，只能在/ebuy才会带上cookie
-// 所以如果使用proxyTable代理要注意这个问题，虚拟目录必须和服务端项目的地址一致
-// 给axios设置baseURL，用于开发模式调用
-axios.defaults.baseURL = myVariable.baseUrl;//设置初始URL
-axios.defaults.withCredentials=true;  // 跨域携带cookie
-
-// import './styles/index.scss'
+//import axios from "axios"//因为要进行全局配置，所以这里不引入，直接引入配置好的axios
+import axios from "@/api/my/my_axios.js";//用自己的全局设置axios代替
 
 //挂在在vue的原型上
 Vue.prototype.$axios = axios;
@@ -61,24 +50,10 @@ Vue.prototype.$axios = axios;
  */
 router.beforeEach((to, from, next) => {
   //读取服务器的JSESSIONID
-/*  axios
-    .get("/api/backstage/sessionId")
-    .then(response => {//获取返回数据
-      let msg=response.data;
-      if (msg.code === 0) {//只有成功才保存
-        console.log(msg.data);
-        store.commit("setUeditorServerUrlWithCredentials",msg.data);//客户端的session对象保存下来
-      }
-    });*/
   //console.log(to.fullPath);// 获取当前路由的完整路径
   store.commit("setRouteMatched",to.matched);//将路由节点信息存入vuex，to.matched获取当前路由的每个路由节点的完整信息
   next(); //调用该方法,才能进入下一个钩子
 })
-
-
-
-
-
 
 /* eslint-disable no-new */
 new Vue({

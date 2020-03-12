@@ -1,5 +1,14 @@
 <template>
-  <el-dialog title="管理员修改" destroy-on-close :close-on-click-modal="false" :visible.sync="dialogFormVisible"  v-loading="loading" width="500px" @opened="openDialogChecked" @closed="closeDailogClean">
+  <el-dialog
+    title="管理员修改"
+    destroy-on-close
+    :visible.sync="dialogFormVisible"
+    :close-on-click-modal="false"
+    :close-on-press-escape="loading==false"
+    :show-close="loading==false"
+    width="500px"
+    @opened="openDialogChecked"
+    @closed="closeDailogClean">
     <!--下面这个可以替换原始的dialog的标题样式-->  
    <!-- <div slot="title" class="header-title">
        <span>管理员创建</span>
@@ -29,8 +38,8 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">取 消</el-button>
-      <el-button type="primary" @click="submitForm('adminForm')">确认修改</el-button>
+      <el-button @click="dialogFormVisible = false" :loading="loading">取 消</el-button>
+      <el-button type="primary" @click="submitForm('adminForm')" :loading="loading">确认修改</el-button>
     </div>
   </el-dialog>
 </template>
@@ -92,6 +101,7 @@
                     this.$axios
                         .get("api/backstage/adminmanage/"+this.id)
                         .then(response => {//获取返回数据/
+                            this.loading=false;
                             let msg=response.data;
                             if (msg.code === 0) {
                                 this.adminForm = msg.data;
@@ -101,13 +111,10 @@
                                 }
                                 //本处Ljy被坑了：然后将服务端传递过来的性别的值改为字符串类型，只有这样才能正确初始化下拉框—。至于原因是初始化时只能识别字符串
                                 this.adminForm.sex=String(this.adminForm.sex);
-                                this.loading=false;
-                            }else{
-                                this.$message.error(msg.msg);
                             }
                         })
                         .catch(error => {
-                            console.log(error);
+                            this.loading=false;
                         });
                 }
             },
@@ -117,9 +124,11 @@
             submitForm(formName) {//提交表单事件
                 this.$refs[formName].validate((valid) => {
                     if (valid) {//如果验证通过
+                        this.loading=true;
                         this.$axios//将更新后的值传到服务端保存
                             .put("/api/backstage/adminmanage",JSON.stringify(this.adminForm))
                             .then(response => {//获取返回数据
+                                this.loading=false;
                                 let msg=response.data;
                                 if (msg.code === 0) {//如果修改成功
                                     this.$message({
@@ -128,12 +137,10 @@
                                     });
                                     this.$emit("adminTableRefresh");//刷新父组件的表格
                                     this.closeDialog();//关闭对话框
-                                }else{//如果修改失败
-                                    this.$message.error(msg.msg);
                                 }
                             })
                             .catch(error => {
-
+                                this.loading=false;
                             });
                     } else {//如果验证不通过
                         return false;

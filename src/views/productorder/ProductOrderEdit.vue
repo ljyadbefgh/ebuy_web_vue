@@ -115,12 +115,7 @@
                                     //this.productOrder.strikePrice=this.form.strikePrice;//设置当前订单成交价
                                     this.$refs[formName].resetFields();//重置表单
                                     this.closeDialog();//关闭对话框
-                                }else{//如果修改失败
-                                    this.$message.error(msg.msg);
                                 }
-                            })
-                            .catch(error => {
-
                             });
                     } else {//如果验证不通过
                         return false;

@@ -116,12 +116,7 @@
                                     });
                                     this.$refs[formName].resetFields();//重置表单
                                     this.$emit("customerTableRefresh");//刷新父组件的表格
-                                }else{//如果修改失败
-                                    this.$message.error(msg.msg);
                                 }
-                            })
-                            .catch(error => {
-
                             });
                     } else {//如果验证不通过
                         return false;

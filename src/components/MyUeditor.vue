@@ -163,7 +163,7 @@
                     if (msg.code === 0) {//只有成功才保存
                         this.$store.commit("setUeditorServerUrlWithCredentials",msg.data);//客户端的session对象保存下来
                         this.$nextTick(() => {//必须加上，否则serverUrl可能无法加载到最新的session
-                            console.log("富文本初始化mounted:"+this.loading);
+                            //console.log("富文本初始化mounted:"+this.loading);
                             let config={//原始配置，必须存在
                                 zIndex:5000,//element的dialog默认是2000，这里应该至少在2000以上。经过测试5000比较稳妥，3000也出现过问题
                                 serverUrl:this.$store.getters.ueditorServerUrlWithCredentials()//必须手动设置，因为uedidot.config.js中保存的地址只会读取一次
@@ -172,7 +172,7 @@
                             this.ueditorConfig=Object.assign(this.ueditorConfig, config);//将配置信息合并。合并对象的值（如果对象本身存在的属性会更新,不存在的属性会增加。注意根据业务场合，这里可以用），不能直接对象引用，否则无法更改表格原来的数据
                             this.ueditor= UE.getEditor(this.editorId,this.ueditorConfig);//根据id，初始化富文本。必须：否则一个父组件只能初始化一个Ueditor。
                             if(this.editorType=='editor'){
-                                console.log("富文本组件初始化:"+this.loading);
+                                //console.log("富文本组件初始化:"+this.loading);
                                 //特别注意，下面是通过不断试验得出的方法，必须配合watch才能完美实现
                                 if(this.value!=''){//特别注意，如果value不为空，如果有值传入，此时赋值。否则不赋值，避免初始化时和watch冲突。
                                     this.setContent(this.value);// 初始化文本框内容
@@ -180,7 +180,7 @@
                                     this.initContent(); //  仅仅初始化富文本
                                 }
                             }else if(this.editorType=='image'){
-                                console.log("图片组件初始化:"+this.loading);
+                                //console.log("图片组件初始化:"+this.loading);
                                 this.setImageEditor();//初始化插件
                             }else{//如果都没有，默认是富文本
                                 // this.setContent(this.value);// 初始化文本框内容

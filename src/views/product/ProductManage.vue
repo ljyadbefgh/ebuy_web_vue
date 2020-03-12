@@ -98,6 +98,12 @@
         <el-table-column
           width="80"
           align="center"
+          prop="recommendation"
+          label="推荐指数">
+        </el-table-column>
+        <el-table-column
+          width="80"
+          align="center"
           prop="productOrderDetailNumber"
           label="订单数">
         </el-table-column>
@@ -125,10 +131,17 @@
         </el-table-column>
         <el-table-column
           show-overflow-tooltip
-          width="80"
+          width="100"
           align="center"
           prop="createTime"
           label="发布时间">
+        </el-table-column>
+        <el-table-column
+          show-overflow-tooltip
+          width="100"
+          align="center"
+          prop="updateTime"
+          label="最后编辑时间">
         </el-table-column>
         <el-table-column
           fixed="right"
@@ -227,12 +240,7 @@
                         let msg=response.data;
                         if (msg.code === 0) {
                             this.orderNumOptions = msg.data;
-                        }else{
-                            this.$message.error(msg.msg);
                         }
-                    })
-                    .catch(error => {
-                        console.log(error);
                     });
             },
             getTableData() {//从服务端读取表格列表
@@ -258,12 +266,7 @@
                                 }
                             });
                             this.table.total=msg.count;
-                        }else{
-                            this.$message.error(msg.msg);
                         }
-                    })
-                    .catch(error => {
-                        console.log(error);
                     });
             },
             handleCurrentChange(value) {//当分页插件的页码改变时触发，value表示前端分页点击的页码
@@ -307,12 +310,7 @@
                                 let msg=response.data;
                                 if (msg.code === 0) {
                                     this.getTableData();// 刷新表格数据
-                                }else{
-                                    this.$message.error(msg.msg);
                                 }
-                            })
-                            .catch(error => {
-                                console.log(error);
                             });
                     }).catch(error => {//选择取消按钮后执行
                         //console.error(error);

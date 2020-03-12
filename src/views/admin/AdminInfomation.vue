@@ -60,8 +60,6 @@
                         let msg=response.data;
                         if (msg.code === 0) {
                             this.admin = msg.data;
-                        }else{
-                            this.$message.error(msg.msg);
                         }
                     })
             }

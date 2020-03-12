@@ -97,12 +97,7 @@
                                         });
                                         this.closeDialog();//关闭窗口
                                         this.$emit("tableRefresh");//刷新父组件的表格
-                                    }else{//如果修改失败
-                                        this.$message.error(msg.msg);
                                     }
-                                })
-                                .catch(error => {
-
                                 });
                         }else{
                             this.$message.error("请先选择产品");

@@ -68,18 +68,6 @@
                         { required: true, message: '不能为空', trigger: 'blur' },
                         { type: 'number', message: '必须为数字值'}
                     ]
-                    /*username: [
-                        { required: true, message: '不能为空', trigger: 'blur' },
-                        { min: 3, max: 10, message: '长度在 3 到 10个字符', trigger: 'blur' },
-                        { pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+$/, message: '不允许输入空格等特殊符号' }
-                    ],
-                    name: [
-                        { required: true, message: '不能为空', trigger: 'blur' },
-                        { max: 8, message: '长度不能超过8个字符', trigger: 'blur' }
-                    ],
-                    sex: [
-                        { required: true, message: '请选择性别', trigger: 'change' }
-                    ]*/
                 }
             }
 
@@ -112,12 +100,7 @@
                                         type: "success",
                                         message: '修改成功'
                                     });
-                                }else{//如果修改失败
-                                    this.$message.error(msg.msg);
                                 }
-                            })
-                            .catch(error => {
-
                             });
                     } else {//如果验证不通过
                         return false;

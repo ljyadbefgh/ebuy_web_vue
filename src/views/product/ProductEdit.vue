@@ -22,6 +22,9 @@
       <el-form-item label="优先级" prop="orderNum" align="left">
         <el-select-orderNum v-model.number="form.orderNum" :orderNumOptions="orderNumOptions"></el-select-orderNum>
       </el-form-item>
+      <el-form-item label="推荐指数" prop="recommendation" align="left">
+        <el-rate v-model="form.recommendation" :max="5" show-score text-color="#ff9900"></el-rate>
+      </el-form-item>
       <el-form-item label="产品原价" prop="originalPrice">
         <el-input v-model="form.originalPrice"></el-input>
       </el-form-item>
@@ -112,6 +115,7 @@
                     name: '',
                     picUrl:'',
                     orderNum:100,
+                    recommendation:0,
                     originalPrice:0.00,
                     price:0.00,
                     repository:0,
@@ -158,22 +162,19 @@
         methods: {
             openDialog(id) {//打开对话框
                 this.dialogFormVisible = true;
-                this.$axios
-                    .get("api/backstage/product/"+id)
-                    .then(response => {//获取返回数据/
-                        let msg=response.data;
-                        if (msg.code === 0) {
-                            //this.form = msg.data;
-                            this.form=Object.assign(this.form,  msg.data);//必须用这个，不能用this.form = msg.data，否则form地址的变化，会导致产品栏目下拉框无法监听
-                            this.form.productTypeId=msg.data.productType.id;//将产品分类的值进行转换，以使用产品分类下拉框
-                            this.form.onSale=String(this.form.onSale);//转换为字符串后，才能给下拉框设置初始值
-                        }else{
-                            this.$message.error(msg.msg);
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+                this.$nextTick(()=>{//防止窗口还没有显示就开始网络连接，导致全局Lodding覆盖不了该窗口
+                    this.$axios
+                        .get("api/backstage/product/"+id)
+                        .then(response => {//获取返回数据/
+                            let msg=response.data;
+                            if (msg.code === 0) {
+                                //this.form = msg.data;
+                                this.form=Object.assign(this.form,  msg.data);//必须用这个，不能用this.form = msg.data，否则form地址的变化，会导致产品栏目下拉框无法监听
+                                this.form.productTypeId=msg.data.productType.id;//将产品分类的值进行转换，以使用产品分类下拉框
+                                this.form.onSale=String(this.form.onSale);//转换为字符串后，才能给下拉框设置初始值
+                            }
+                        });
+                });
             },
             closeDialog() {//关闭对话框
                 this.dialogFormVisible = false;
@@ -214,12 +215,7 @@
                                     });
                                     this.$emit("tableRefresh");//刷新父组件的表格
                                     this.closeDialog();//关闭对话框
-                                }else{//如果修改失败
-                                    this.$message.error(msg.msg);
                                 }
-                            })
-                            .catch(error => {
-
                             });
                     } else {//如果验证不通过
                         return false;

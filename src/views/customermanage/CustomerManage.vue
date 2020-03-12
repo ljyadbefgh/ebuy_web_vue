@@ -234,12 +234,7 @@
                                 }
                             });
                             this.table.total=msg.count;
-                        }else{
-                            this.$message.error(msg.msg);
                         }
-                    })
-                    .catch(error => {
-                        console.log(error);
                     });
             },
             handleCurrentChange(value) {//当分页插件的页码改变时触发，value表示前端分页点击的页码
@@ -283,12 +278,7 @@
                                 let msg=response.data;
                                 if (msg.code === 0) {
                                     this.getCustomers();// 刷新表格数据
-                                }else{
-                                    this.$message.error(msg.msg);
                                 }
-                            })
-                            .catch(error => {
-                                console.log(error);
                             });
                     }).catch(error => {//选择取消按钮后执行
                         //console.error(error);
@@ -313,12 +303,7 @@
                                 let msg=response.data;
                                 if (msg.code === 0) {
                                     this.getCustomers();// 刷新表格数据
-                                }else{
-                                    this.$message.error(msg.msg);
                                 }
-                            })
-                            .catch(error => {
-                                console.log(error);
                             });
                     }).catch(error => {//选择取消按钮后执行
                         //console.error(error);

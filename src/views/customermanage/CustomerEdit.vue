@@ -86,21 +86,18 @@
         methods: {
             openDialog(id) {//打开对话框
                 this.dialogFormVisible = true;
-                this.$axios
-                    .get("api/backstage/customermanage/"+id)
-                    .then(response => {//获取返回数据/
-                        let msg=response.data;
-                        if (msg.code === 0) {
-                            this.form = msg.data;
-                            //本处Ljy被坑了：然后将服务端传递过来的性别的值改为字符串类型，只有这样才能正确初始化下拉框—。至于原因是初始化时只能识别字符串
-                            this.form.sex=String(this.form.sex);
-                        }else{
-                            this.$message.error(msg.msg);
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+                this.$nextTick(()=>{//防止窗口还没有显示就开始网络连接，导致全局Lodding覆盖不了该窗口
+                    this.$axios
+                        .get("api/backstage/customermanage/"+id)
+                        .then(response => {//获取返回数据/
+                            let msg=response.data;
+                            if (msg.code === 0) {
+                                this.form = msg.data;
+                                //本处Ljy被坑了：然后将服务端传递过来的性别的值改为字符串类型，只有这样才能正确初始化下拉框—。至于原因是初始化时只能识别字符串
+                                this.form.sex=String(this.form.sex);
+                            }
+                        });
+                })
             },
             closeDialog() {//关闭对话框
                 this.dialogFormVisible = false;
@@ -125,12 +122,7 @@
                                     });
                                     this.closeDialog();
                                     this.$emit("customerTableRefresh");//刷新父组件的表格
-                                }else{//如果修改失败
-                                    this.$message.error(msg.msg);
                                 }
-                            })
-                            .catch(error => {
-
                             });
                     } else {//如果验证不通过
                         return false;

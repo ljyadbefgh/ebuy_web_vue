@@ -84,7 +84,9 @@
             openDialog(id) {//打开对话框
                 this.dialogFormVisible = true;
                 this.roleId=id;
-                this.getRolePurviews();//从服务端读取该角色的所有权限关系
+                this.$nextTick(()=>{//防止窗口还没有显示就开始网络连接，导致全局Lodding覆盖不了该窗口
+                    this.getRolePurviews();//从服务端读取该角色的所有权限关系
+                });
             },
             closeDialog() {//关闭对话框
                 this.dialogFormVisible = false;
@@ -112,12 +114,7 @@
                                     }
                                 });
                             });
-                        } else {
-                            this.$message.error(msg.msg);
                         }
-                    })
-                    .catch(error => {
-                        console.log(error);
                     });
             },
             tableSelect(selection, row){//当用户手动勾选数据行的 Checkbox 时触发的事件.selection表示当前选中的行（多个），row表示当前的行
@@ -135,13 +132,13 @@
                                 });
                                 row=Object.assign(row, rolePurview);//合并对象的值（如果对象本身存在的属性会更新,不存在的属性会增加。注意根据业务场合，这里可以用），不能直接对象引用，否则无法更改表格原来的数据
                             } else {//如果操作失败，则取消当前行勾选的复选框
-                                this.$message.error(msg.msg);
                                 //取消勾选状态
                                 this.$refs.rolePurviewTable.toggleRowSelection(row,!selected);
                             }
                         })
                         .catch(error => {
-                            console.log(error);
+                            //取消勾选状态
+                            this.$refs.rolePurviewTable.toggleRowSelection(row,!selected);
                         });
                 }else{//如果取消了该行的勾选
                     this.$axios
@@ -161,20 +158,17 @@
                                 });
                                 row=Object.assign(row, { id: null}, { createTime: null },{permissions,permissions});//合并对象的值（注意根据业务场合，这里可以用），不能直接对象引用，否则无法更改表格原来的数据
                             } else {//如果操作失败，则取消当前行勾选的复选框
-                                this.$message.error(msg.msg);
                                 //取消勾选状态
                                 this.$refs.rolePurviewTable.toggleRowSelection(row,!selected);
                             }
                         })
                         .catch(error => {
-                            console.log(error);
+                            //取消勾选状态
+                            this.$refs.rolePurviewTable.toggleRowSelection(row,!selected);
                         });
                 }
             },
             permissionsChange(callback,row,item){//修改权限对应的动作。callback为回调函数的值（表示复选框是否勾选，row为当前行，item为当前点击的权限动作复选框（单个）
-                /*console.log(callback);
-                console.log(row);
-                console.log(item);*/
                 if(callback){//如果是选中状态
                     //添加该关系
                     this.$axios
@@ -188,13 +182,13 @@
                                     message: "操作成功"
                                 });
                             } else {//如果操作失败，则取消当前行勾选的复选框
-                                this.$message.error(msg.msg);
                                 //取消勾选状态
                                 item.selected=!callback;
                             }
                         })
                         .catch(error => {
-                            console.log(error);
+                            //取消勾选状态
+                            item.selected=!callback;
                         });
                 }else{//如果是取消状态
                     //添加该关系
@@ -209,13 +203,13 @@
                                     message: "操作成功"
                                 });
                             } else {//如果操作失败，则重新勾选当前取消的复选框
-                                this.$message.error(msg.msg);
                                 //重新勾选
                                 item.selected=!callback;
                             }
                         })
                         .catch(error => {
-                            console.log(error);
+                            //重新勾选
+                            item.selected=!callback;
                         });
                 }
             },
@@ -231,13 +225,11 @@
                                     type: "success",
                                     message: "成功移除所有角色关系"
                                 });
-                            } else {//如果操作失败
-                                this.$message.error(msg.msg);
                             }
                             this.getRolePurviews();// 从服务端读取该角色的所有权限关系
                         })
                         .catch(error => {
-                            console.log(error);
+                            this.getRolePurviews();// 从服务端读取该角色的所有权限关系
                         });
                 }else{// 表示勾选了：全选
                     //添加该关系
@@ -250,13 +242,11 @@
                                     type: "success",
                                     message: "成功为角色赋予所有权限关系"
                                 });
-                            } else {//如果操作失败
-                                this.$message.error(msg.msg);
                             }
                             this.getRolePurviews();// 从服务端读取该角色的所有权限关系
                         })
                         .catch(error => {
-                            console.log(error);
+                            this.getRolePurviews();// 从服务端读取该角色的所有权限关系
                         });
                 }
             }

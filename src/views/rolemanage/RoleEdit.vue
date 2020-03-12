@@ -59,19 +59,16 @@
         methods: {
             openDialog(id) {//打开对话框
                 this.dialogFormVisible = true;
-                this.$axios
-                    .get("api/backstage/rolemanage/"+id)
-                    .then(response => {//获取返回数据/
-                        let msg=response.data;
-                        if (msg.code === 0) {
-                            this.form = msg.data;
-                        }else{
-                            this.$message.error(msg.msg);
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+                this.$nextTick(()=>{//防止窗口还没有显示就开始网络连接，导致全局Lodding覆盖不了该窗口
+                    this.$axios
+                        .get("api/backstage/rolemanage/"+id)
+                        .then(response => {//获取返回数据/
+                            let msg=response.data;
+                            if (msg.code === 0) {
+                                this.form = msg.data;
+                            }
+                        });
+                });
             },
             closeDialog() {//关闭对话框
                 this.dialogFormVisible = false;
@@ -96,12 +93,7 @@
                                     });
                                     this.$emit("roleTableRefresh");//刷新父组件的表格
                                     this.closeDialog();//关闭对话框
-                                }else{//如果修改失败
-                                    this.$message.error(msg.msg);
                                 }
-                            })
-                            .catch(error => {
-
                             });
                     } else {//如果验证不通过
                         return false;

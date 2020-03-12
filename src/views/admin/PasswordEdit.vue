@@ -10,7 +10,9 @@
       <el-form-item label="确认密码" prop="rePass">
         <el-input  show-password v-model="form.rePass"></el-input>
       </el-form-item>
-      <el-button type="primary" @click="submitForm('form')">修改密码</el-button>
+      <div style="text-align: center;">
+        <el-button type="primary" @click="submitForm('form')" :loading="loading">修改</el-button>
+      </div>
     </el-form>
 
   </div>
@@ -35,6 +37,7 @@
                 }
             };
             return {
+                loading:false,
                 form:{},
                 rules: {
                     password: [
@@ -59,6 +62,7 @@
             submitForm(formName) {//提交表单事件
                 this.$refs[formName].validate((valid) => {
                     if (valid) {//如果验证通过
+                        this.loading=true;
                         this.$axios//将更新后的值传到服务端保存
                             .patch("/api/backstage/admin/password",JSON.stringify(this.form))
                             .then(response => {//获取返回数据
@@ -68,12 +72,11 @@
                                         type: "success",
                                         message: msg.msg
                                     });
-                                }else{//如果修改失败
-                                    this.$message.error(msg.msg);
                                 }
+                                this.loading=false;
                             })
                             .catch(error => {
-
+                                this.loading=false;
                             });
                     } else {//如果验证不通过
                         return false;

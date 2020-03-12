@@ -14,7 +14,9 @@
           <el-option key="2" value="2" label="女"></el-option>
         </el-select>
       </el-form-item>
-      <el-button type="primary" @click="submitForm('form')">修改</el-button>
+      <div style="text-align: center;">
+        <el-button type="primary" @click="submitForm('form')" :loading="loading">修改</el-button>
+      </div>
     </el-form>
 
   </div>
@@ -23,12 +25,9 @@
 <script>
     export default {
         name: "AdminEdit",
-       /* components: {
-            MyBreadcrumb:() => import("@/components/MyBreadcrumb")
-        },*/
-
         data() {
             return {
+                loading:false,
                 form:{},
                 rules: {
                     username: [
@@ -49,7 +48,6 @@
         },
         methods: {
             getMyAdmin() {//读取当前登陆的用户信息
-                let _this=this;
                 this.$axios
                     .get("/api/backstage/admin")
                     .then(response => {//获取返回数据
@@ -58,14 +56,13 @@
                             this.form = msg.data;
                             //本处Ljy被坑了：然后将服务端传递过来的性别的值改为字符串类型，只有这样才能正确初始化下拉框—。至于原因是初始化时只能识别字符串
                             this.form.sex=String(this.form.sex);
-                        }else{
-                            this.$message.error(msg.msg);
                         }
                     })
             },
             submitForm(formName) {//提交表单事件
                 this.$refs[formName].validate((valid) => {
                     if (valid) {//如果验证通过
+                        this.loading=true;
                         this.$axios//将更新后的值传到服务端保存
                             .put("/api/backstage/admin",JSON.stringify(this.form))
                             .then(response => {//获取返回数据
@@ -75,12 +72,11 @@
                                         type: "success",
                                         message: msg.msg
                                     });
-                                }else{//如果修改失败
-                                    this.$message.error(msg.msg);
                                 }
+                                this.loading=false;
                             })
                             .catch(error => {
-
+                                this.loading=false;
                             });
                     } else {//如果验证不通过
                         return false;

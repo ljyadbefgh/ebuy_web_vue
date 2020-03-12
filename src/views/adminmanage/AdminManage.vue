@@ -10,7 +10,7 @@
             <el-input v-model="adminQuery.name" placeholder="网名"></el-input>
           </el-form-item>
           <el-form-item label="角色" >
-          <el-select v-model="adminQuery.roleIds" @change="roleSelect" filterable  multiple placeholder="请选择">
+          <el-select v-model="adminQuery.roleIds" @change="roleSelect"  filterable  multiple placeholder="请选择">
             <el-option
               v-for="item in roles"
               :key="item.id"
@@ -59,6 +59,8 @@
         <!-- 表格插件-->
         <el-table
           @selection-change="handleSelectionChange"
+          v-loading="tableLoading"
+          element-loading-text="表格加载中，请稍后……"
           :data="tableData"
           stripe
           border
@@ -208,6 +210,7 @@
         data() {
             return {
                 disabled:true,//用于批量删除和批量角色分配按钮的可用性属性，只有当选择了复选框时才可以操作
+                tableLoading:false, //用于表格是否在加载中
                 tableData: [],//表格记录
                 // 分页-传递到服务端的数值
                 limit: 20,//每页的最大记录数
@@ -253,9 +256,6 @@
             }
         },
         methods: {
-            handleClick(row) {
-                console.log(row);
-            },
             formatSex(row, column) {
                 if(row.sex==1){
                     return '男';
@@ -270,8 +270,6 @@
                         let msg=response.data;
                         if (msg.code === 0) {
                             this.roles = msg.data;
-                        }else{
-                            this.$message.error(msg.msg);
                         }
                     })
             },
@@ -280,6 +278,7 @@
                 if(this.adminQuery.roleIds!=null){//必须要角色集合有值才进行toString()转换，否则会出异常
                     roleIdsString=this.adminQuery.roleIds.toString();
                 }
+                this.tableLoading=true;
                 this.$axios
                     .get("/api/backstage/adminmanage",{
                         params: {
@@ -294,15 +293,14 @@
                     })
                     .then(response => {//获取返回数据
                         let msg=response.data;
+                        this.tableLoading=false;
                         if (msg.code === 0) {
                             this.tableData = msg.data;
                             this.total=msg.count;
-                        }else{
-                            this.$message.error(msg.msg);
                         }
                     })
                     .catch(error => {
-                        console.log(error);
+                        this.tableLoading=false;
                     });
             },
             handleCurrentChange(value) {//当分页插件的页码改变时触发，value表示前端分页点击的页码
@@ -323,10 +321,12 @@
                let admin={//封装属性到要传递的对象
                     id:row.id,
                     unLocked:callback
-                }
+                };
+                this.tableLoading=true;
                 this.$axios//将更新后的值传到服务端保存
                     .put("/api/backstage/adminmanage",JSON.stringify(admin))
                     .then(response => {//获取返回数据
+                        this.tableLoading=false;
                         let msg=response.data;
                         if (msg.code === 0) {//如果修改成功
                             this.$message({
@@ -339,6 +339,7 @@
                         }
                     })
                     .catch(error => {
+                        this.tableLoading=false;
                         row.unLocked=!callback;//让开关状态回到修改前
                     });
             },
@@ -375,13 +376,8 @@
                                 let msg=response.data;
                                 if (msg.code === 0) {
                                     this.getAdminList();// 刷新表格数据
-                                }else{
-                                    this.$message.error(msg.msg);
                                 }
                             })
-                            .catch(error => {
-                                console.log(error);
-                            });
                     }).catch(error => {//选择取消按钮后执行
                         //console.error(error);
                     });

@@ -40,25 +40,22 @@
             openDialog(id) {//打开对话框
                 this.dialogFormVisible = true;
                 this.action=this.myVariable.baseUrl+"/api/backstage/producttype/uploadPhoto/"+id;//定义上传头像的地址
-                this.$axios
-                    .get("/api/backstage/producttype/"+id)
-                    .then(response => {//获取返回数据/
-                        let msg=response.data;
-                        if (msg.code === 0) {
-                            this.productType=msg.data;
-                            let imageUrl=this.productType.imageUrl;
-                            if(imageUrl!=null&&imageUrl!=''){
-                                this.imageUrl=imageUrl+"?"+Math.random();//重要：被坑了很久实验多次才成功，并且要这里设置。设置图片地址不缓存，因为如果头像有上传，地址都是一样的（服务端决定）。因此如果不加入，浏览器会因为图片地址不变化设置缓存，导致新上传的图片无法在浏览器显示
-                            }else{
-                                this.imageUrl='';
+                this.$nextTick(()=>{//防止窗口还没有显示就开始网络连接，导致全局Lodding覆盖不了该窗口
+                    this.$axios
+                        .get("/api/backstage/producttype/"+id)
+                        .then(response => {//获取返回数据/
+                            let msg=response.data;
+                            if (msg.code === 0) {
+                                this.productType=msg.data;
+                                let imageUrl=this.productType.imageUrl;
+                                if(imageUrl!=null&&imageUrl!=''){
+                                    this.imageUrl=imageUrl+"?"+Math.random();//重要：被坑了很久实验多次才成功，并且要这里设置。设置图片地址不缓存，因为如果头像有上传，地址都是一样的（服务端决定）。因此如果不加入，浏览器会因为图片地址不变化设置缓存，导致新上传的图片无法在浏览器显示
+                                }else{
+                                    this.imageUrl='';
+                                }
                             }
-                        }else{
-                            this.$message.error(msg.msg);
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+                        });
+                });
             },
             closeDialog() {//关闭对话框
                 this.dialogFormVisible = false;

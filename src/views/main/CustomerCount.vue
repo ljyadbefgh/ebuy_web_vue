@@ -38,9 +38,6 @@
                         }else{
                             this.number='-';
                         }
-                    })
-                    .catch(error => {
-                        console.log(error);
                     });
             }
         },

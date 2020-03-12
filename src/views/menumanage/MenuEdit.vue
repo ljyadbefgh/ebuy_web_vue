@@ -112,26 +112,23 @@
             openDialog(id) {//打开对话框
                 this.dialogFormVisible = true;
                 if(id!=undefined){//如果id存在
-                    this.$axios
-                        .get("api/backstage/menumanage/"+id)
-                        .then(response => {//获取返回数据/
-                            let msg=response.data;
-                            if (msg.code === 0) {
-                                this.form = msg.data;
-                                this.form.menuIdPathArray=new Array();//创建数组来获取父组件的路径
-                                if(this.form.parentId!=null||this.form.parentId!=undefined){//如果存在父栏目
-                                    let nodePathArray = this.myMethod.tree.getRootPathAtTreeByKey(this.form.parentId, 'id', this.menuArray);//根据指定的节点获取该节点的完整父路径（含当前节点）
-                                    for(let i=0;i<nodePathArray.length;i++){//将节点集合转换为id集合（这样才符合树形组件默认值方式）
-                                        this.form.menuIdPathArray.push(nodePathArray[i].id);
+                    this.$nextTick(()=>{//防止窗口还没有显示就开始网络连接，导致全局Lodding覆盖不了该窗口
+                        this.$axios
+                            .get("api/backstage/menumanage/"+id)
+                            .then(response => {//获取返回数据/
+                                let msg=response.data;
+                                if (msg.code === 0) {
+                                    this.form = msg.data;
+                                    this.form.menuIdPathArray=new Array();//创建数组来获取父组件的路径
+                                    if(this.form.parentId!=null||this.form.parentId!=undefined){//如果存在父栏目
+                                        let nodePathArray = this.myMethod.tree.getRootPathAtTreeByKey(this.form.parentId, 'id', this.menuArray);//根据指定的节点获取该节点的完整父路径（含当前节点）
+                                        for(let i=0;i<nodePathArray.length;i++){//将节点集合转换为id集合（这样才符合树形组件默认值方式）
+                                            this.form.menuIdPathArray.push(nodePathArray[i].id);
+                                        }
                                     }
                                 }
-                            }else{
-                                this.$message.error(msg.msg);
-                            }
-                        })
-                        .catch(error => {
-                            console.log(error);
-                        });
+                            });
+                    });
                 }
             },
             closeDialog() {//关闭对话框
@@ -153,7 +150,6 @@
             submitForm(formName) {//提交表单事件
                 //let nodesObj = this.$refs['menuCascader'].getCheckedNodes(true);
                 //console.log(this.form.menuIdPathArray);
-                console.log(window.JSON.stringify(this.form));
                 this.$refs[formName].validate((valid) => {
                     if (valid) {//如果验证通过
                        this.$axios//将更新后的值传到服务端保存
@@ -167,12 +163,7 @@
                                     });
                                     this.closeDialog();//关闭对话框
                                     this.$emit("menuTableRefresh");//刷新父组件的表格
-                                }else{//如果修改失败
-                                    this.$message.error(msg.msg);
                                 }
-                            })
-                            .catch(error => {
-
                             });
                     } else {//如果验证不通过
                         return false;

@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card shadow="hover">
-      <div id="productTypeSaleChart" :style="{width: '100%', height: '300px'}"></div>
+      <div id="productTypeSaleVolumeChart" :style="{width: '100%', height: '300px'}"></div>
 
     </el-card>
   </div>
@@ -10,7 +10,7 @@
 
 <script>
   /**
-   *产品各栏目销售额比重的饼状图
+   *产品各栏目销售量比重的饼状图
    */
     import  'echarts/theme/fresh-cut.js'//导入青绿色
     export default {
@@ -28,7 +28,7 @@
              */
             drawLine(title,names,data) {//实例化产品图形
                 //初始化echarts实例。不能在单个容器上初始化多个 ECharts 实例。
-                let myChart = this.$echarts.init(document.getElementById('productTypeSaleChart'),"fresh-cut");
+                let myChart = this.$echarts.init(document.getElementById('productTypeSaleVolumeChart'),"fresh-cut");
                 let option = {
                     title: {
                         text: title,
@@ -46,7 +46,7 @@
                     },
                     series: [
                         {
-                            name: '销售额',
+                            name: '销售量',
                             type: 'pie',//表示饼图
                             radius: '55%',//图形站整个表格比例的大小
                             center: ['60%', '60%'],//图形在整个表格偏移量。第一个数字是距离左边的水平偏移比例；第二个数字是距离顶部的垂直偏移比例
@@ -66,7 +66,7 @@
             },
             getData(){
                 this.$axios
-                    .get("/api/backstage/count/maxSaleOfProductType",{
+                    .get("/api/backstage/count/maxSaleVolumeOfProductType",{
                         params: {
                             limit:10
                         }
@@ -78,7 +78,7 @@
                             msg.data.forEach(item => {
                                 names.push(item.name);
                             })
-                            this.drawLine("产品各栏目销售额比重",names,msg.data);
+                            this.drawLine("产品各栏目销售量比重",names,msg.data);
                         }
                     });
             }

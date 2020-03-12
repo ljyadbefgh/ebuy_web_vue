@@ -1,5 +1,12 @@
 <template>
-  <el-dialog title="为选择的账户赋予相应的角色" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="600">
+  <el-dialog
+    title="为选择的账户赋予相应的角色"
+    :visible.sync="dialogFormVisible"
+    destroy-on-close
+    :close-on-click-modal="false"
+    :close-on-press-escape="loading==false"
+    :show-close="loading==false"
+    width="600">
     <!--下面这个可以替换原始的dialog的标题样式-->  
    <!-- <div slot="title" class="header-title">
        <span>管理员创建</span>
@@ -19,8 +26,8 @@
     </el-form>
     <div slot="footer" class="dialog-footer" align="center">
 <!--      <el-button @click="dialogFormVisible = false">取 消</el-button>-->
-      <el-button type="primary" @click="addRolesToAdmins('adminForm')">批量赋予角色</el-button>
-      <el-button type="danger" @click="removeRolesFromAdmins('adminForm')" >批量移除角色</el-button>
+      <el-button type="primary" @click="addRolesToAdmins('adminForm')" :loading="loading">批量赋予角色</el-button>
+      <el-button type="danger" @click="removeRolesFromAdmins('adminForm')" :loading="loading">批量移除角色</el-button>
     </div>
   </el-dialog>
 </template>
@@ -45,6 +52,7 @@
         data() {
             return {
                 dialogFormVisible: false,
+                loading:false,//对应Loadding组件
                 adminForm: {
                     adminIds: [],//已经选择的账户复选框的id集合
                     roleIds:[]//已经选择的角色复选框的id集合，后端需要
@@ -77,9 +85,11 @@
             addRolesToAdmins(formName) {//将角色批量赋予多个账户
                 this.$refs[formName].validate((valid) => {
                     if (valid) {//如果验证通过
+                        this.loading=true;
                         this.$axios//将更新后的值传到服务端保存
                             .post("/api/backstage/adminmanage/adminRoleRelationManage/addRolesForAdmins",JSON.stringify(this.adminForm))
                             .then(response => {//获取返回数据
+                                this.loading=false;
                                 let msg=response.data;
                                 if (msg.code === 0) {//如果修改成功
                                     this.$message({
@@ -88,12 +98,10 @@
                                     });
                                     this.closeDialog();//关闭窗口
                                     this.$emit("adminTableRefresh");//刷新父组件的表格
-                                }else{//如果修改失败
-                                    this.$message.error(msg.msg);
                                 }
                             })
                             .catch(error => {
-
+                                this.loading=false;
                             });
                     } else {//如果验证不通过
                         return false;
@@ -103,9 +111,11 @@
             removeRolesFromAdmins(formName) {//将角色批量从多个账户中删除
                 this.$refs[formName].validate((valid) => {
                     if (valid) {//如果验证通过
+                        this.loading=true;
                         this.$axios//将更新后的值传到服务端保存
                             .delete("/api/backstage/adminmanage/adminRoleRelationManage/removeRolesFromAdmins",{data: this.adminForm})
                             .then(response => {//获取返回数据
+                                this.loading=false;
                                 let msg=response.data;
                                 if (msg.code === 0) {//如果修改成功
                                     this.$message({
@@ -114,12 +124,10 @@
                                     });
                                     this.closeDialog();//关闭窗口
                                     this.$emit("adminTableRefresh");//刷新父组件的表格
-                                }else{//如果修改失败
-                                    this.$message.error(msg.msg);
                                 }
                             })
                             .catch(error => {
-
+                                this.loading=false;
                             });
                     } else {//如果验证不通过
                         return false;

@@ -138,12 +138,7 @@
                         if (msg.code === 0) {
                             this.myMethod.tree.setTreeNodeChildrenForUndefined(msg.data);
                             this.menuArray = msg.data;
-                        }else{
-                            this.$message.error(msg.msg);
                         }
-                    })
-                    .catch(error => {
-                        console.log(error);
                     });
             },
             handleSelectionChange(value){//当选择项发生变化时会触发该事件，这里用于获取选择的记录（多选）.value可以获取所有选择了的行记录row
@@ -173,12 +168,7 @@
                                 let msg=response.data;
                                 if (msg.code === 0) {
                                     this.getTreeMenu();// 刷新表格数据
-                                }else{
-                                    this.$message.error(msg.msg);
                                 }
-                            })
-                            .catch(error => {
-                                console.log(error);
                             });
                     }).catch(() => { });
                 }).catch(error => {//选择取消按钮后执行

@@ -1,7 +1,19 @@
 <template>
-  <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="false"  align="center"  width="630px" @opened="openDialogChecked" @closed="closeDailogClean">
+  <el-dialog
+    :title="title"
+    :visible.sync="dialogFormVisible"
+    :close-on-click-modal="false"
+    :close-on-press-escape="loading==false"
+    :show-close="loading==false"
+    destroy-on-close
+    align="center"
+    width="630px"
+    @opened="openDialogChecked"
+    @closed="closeDailogClean">
     <el-transfer
       align="left"
+      v-loading="loading"
+      element-loading-text="与服务器交互中，请稍后……"
       v-model="rolesSelect"
       :titles="titles"
       :data="roles"
@@ -16,6 +28,7 @@
         name: "AdminRoleRelationManage",
         data() {
             return {
+                loading:false,//对应Loadding组件
                 id:'',//接收传递过来的id的值
                 name:'',//接收传递过来的name值
                 title:'',//对话框的标题
@@ -47,12 +60,14 @@
 
             },
             getAdminRoleRelation(){//重新读取角色关系信息
+                this.loading=true;
                 //清空穿梭框里面的原始值，避免第二次打开还会存在
                 this.roles.length=0;
                 this.rolesSelect.length=0;
                 this.$axios
                     .get("api/backstage/adminmanage/"+this.id+"/adminRoleRelationManage")
                     .then(response => {//获取返回数据/
+                        this.loading=false;
                         let msg=response.data;
                         if (msg.code === 0) {
                             let adminRoles = msg.data;
@@ -71,48 +86,53 @@
                                     this.rolesSelect.push(adminRole.role.id);
                                 }
                             }
-                        }else{
-                            this.$message.error(msg.msg);
                         }
                     })
                     .catch(error => {
-                        console.log(error);
+                        this.loading=false;
                     });
             },
             handleChange(rightValue, direction, movedKeys) {//回调参数：当前值、数据移动的方向（'left' / 'right'）、发生移动的数据 key 数组。rightValue表示右边栏目也是当前拥有的记录数（key值）集合；movedkey表示当前移动的数组的（key值）集合
+                this.loading=true;
                 //可以通过direction回调right/left 来进行操作，right：把数字移到右边，left把数据移到左边
                 if(direction === "right") {//把记录向右边移动
                     this.$axios
                         .post("/api/backstage/adminmanage/" + this.id+"/adminRoleRelationManage/roles/"+movedKeys.toString())
                         .then(response => {//获取返回数据
+                            this.loading=false;
                             let msg=response.data;
                             if (msg.code === 0) {
-                                this.$message("操作成功");
+                                this.$message({
+                                    type: "success",
+                                    message: "操作成功"
+                                });
                                 this.$emit("adminTableRefresh");//刷新父组件的表格
                             }else{
                                 this.getAdminRoleRelation();//重新读取角色关系信息
-                                this.$message.error(msg.msg);
                             }
                         })
                         .catch(error => {
-                            console.log(error);
+                            this.loading=false;
                         });
                 }
                 if(direction === "left") {//向左边移动
                     this.$axios
                         .delete("/api/backstage/adminmanage/" + this.id+"/adminRoleRelationManage/roles/"+movedKeys.toString())
                         .then(response => {//获取返回数据
+                            this.loading=false;
                             let msg=response.data;
                             if (msg.code === 0) {
-                                this.$message("操作成功");
+                                this.$message({
+                                    type: "success",
+                                    message: "操作成功"
+                                });
                                 this.$emit("adminTableRefresh");//刷新父组件的表格
                             }else{
                                 this.getAdminRoleRelation();//重新读取角色关系信息
-                                this.$message.error(msg.msg);
                             }
                         })
                         .catch(error => {
-                            console.log(error);
+                            this.loading=false;
                         });
                 }
             }

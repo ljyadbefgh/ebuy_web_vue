@@ -1,5 +1,12 @@
 <template>
-  <el-dialog title="管理员创建" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="500px" @opened="opened" >
+  <el-dialog
+    title="管理员创建"
+    :close-on-click-modal="false"
+    :visible.sync="dialogFormVisible"
+    :close-on-press-escape="loading==false"
+    :show-close="loading==false"
+    width="500px"
+    @opened="opened" >
     <!--下面这个可以替换原始的dialog的标题样式-->  
    <!-- <div slot="title" class="header-title">
        <span>管理员创建</span>
@@ -32,8 +39,8 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">取 消</el-button>
-      <el-button type="primary" @click="submitForm('adminForm')">创建管理员</el-button>
+      <el-button @click="dialogFormVisible = false" :loading="loading">取 消</el-button>
+      <el-button type="primary" @click="submitForm('adminForm')" :loading="loading">创建管理员</el-button>
     </div>
   </el-dialog>
 </template>
@@ -51,6 +58,7 @@
         },
         data() {
             return {
+                loading:false,
                 dialogFormVisible: false,
                 adminForm: {
                     username: '',
@@ -102,9 +110,11 @@
             submitForm(formName) {//提交表单事件
                 this.$refs[formName].validate((valid) => {
                     if (valid) {//如果验证通过
+                        this.loading=true;
                         this.$axios//将更新后的值传到服务端保存
                             .post("/api/backstage/adminmanage",JSON.stringify(this.adminForm))
                             .then(response => {//获取返回数据
+                                this.loading=false;
                                 let msg=response.data;
                                 if (msg.code === 0) {//如果提交成功
                                     this.$message({
@@ -113,12 +123,10 @@
                                     });
                                     this.$refs[formName].resetFields();//重置表单
                                     this.$emit("adminTableRefresh");//刷新父组件的表格
-                                }else{//如果修改失败
-                                    this.$message.error(msg.msg);
                                 }
                             })
                             .catch(error => {
-
+                                this.loading=false;
                             });
                     } else {//如果验证不通过
                         return false;

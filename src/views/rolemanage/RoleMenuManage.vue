@@ -47,27 +47,24 @@
             openDialog(id) {//打开对话框
                 this.roleId=id;
                 this.dialogFormVisible = true;
-                this.$axios
-                    .get("api/backstage/rolemanage/menu/"+id)
-                    .then(response => {//获取返回数据/
-                        let msg=response.data;
-                        if (msg.code === 0) {
-                            this.menus = msg.data.treeMenu;
-                            this.menuIds=msg.data.menusId;
-                            this.menuNodeNumber=this.myMethod.tree.getNodeNumberFromTreeNode(this.menus);// 获取树节点的总数（递归）
-                            if(this.menuNodeNumber==this.menuIds.length){//如果已勾选的菜单和总菜单的数量一致
-                                this.checkAll=true;//设置全选复选框为勾选状态
-                            }else{//如果不是
-                                this.checkAll=false;//设置全选复选框为未勾选状态
+                this.$nextTick(()=>{//防止窗口还没有显示就开始网络连接，导致全局Lodding覆盖不了该窗口
+                    this.$axios
+                        .get("api/backstage/rolemanage/menu/"+id)
+                        .then(response => {//获取返回数据/
+                            let msg=response.data;
+                            if (msg.code === 0) {
+                                this.menus = msg.data.treeMenu;
+                                this.menuIds=msg.data.menusId;
+                                this.menuNodeNumber=this.myMethod.tree.getNodeNumberFromTreeNode(this.menus);// 获取树节点的总数（递归）
+                                if(this.menuNodeNumber==this.menuIds.length){//如果已勾选的菜单和总菜单的数量一致
+                                    this.checkAll=true;//设置全选复选框为勾选状态
+                                }else{//如果不是
+                                    this.checkAll=false;//设置全选复选框为未勾选状态
+                                }
+                                this.$refs.menuTree.setCheckedKeys(this.menuIds);//设置默认选择菜单
                             }
-                            this.$refs.menuTree.setCheckedKeys(this.menuIds);//设置默认选择菜单
-                        }else{
-                            this.$message.error(msg.msg);
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+                        });
+                });
             },
             closeDialog() {//关闭对话框
                 this.dialogFormVisible = false;
@@ -113,12 +110,7 @@
                             });
                             this.closeDialog();//关闭对话框
                             this.$emit("roleTableRefresh");//刷新父组件的表格
-                        }else{//如果修改失败
-                            this.$message.error(msg.msg);
                         }
-                    })
-                    .catch(error => {
-
                     });
             }
         }

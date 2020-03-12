@@ -49,12 +49,7 @@
                         let msg=response.data;
                         if (msg.code === 0) {
                             this.options = msg.data;
-                        }else{
-                            this.$message.error(msg.msg);
                         }
-                    })
-                    .catch(error => {
-                        console.log(error);
                     });
             }
         },
