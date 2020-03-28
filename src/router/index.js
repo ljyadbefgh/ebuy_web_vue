@@ -166,6 +166,11 @@ export default new Router({
                   path: 'LogOfAdminLoginManage',
                   name:'管理员登陆日志',
                   component: () => import("@/views/log/LogOfAdminLoginManage.vue")
+                },
+                {
+                  path: 'LogOfProductClickManage',
+                  name:'产品访问日志',
+                  component: () => import("@/views/log/LogOfProductClickManage.vue")
                 }
                 ]
             }

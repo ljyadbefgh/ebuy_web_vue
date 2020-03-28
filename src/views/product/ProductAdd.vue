@@ -7,7 +7,7 @@
       <el-form-item label="名称" prop="name">
         <el-input v-model="form.name" maxlength="10" show-word-limit></el-input>
       </el-form-item>
-      <el-form-item label="图片" prop="picUrl" align="left">
+      <el-form-item label="标题图片" prop="picUrl" align="left">
         <el-input v-model="form.picUrl" clearable readonly style="width: 300px;"></el-input>
         <MyUeditor
           ref="pictureUeditor"
@@ -17,8 +17,33 @@
           :config="picUrlConfig"
           editorType="image"
           @uploadPicUrl="uploadPicUrl"
-        >
-        </MyUeditor>
+        />
+      </el-form-item>
+      <el-form-item label="预览图">
+        <div id="picturePreViewsDiv">
+          <article
+            class="picturePreView"
+            @mouseover="imageOperatorShow=true"
+            @mouseout="imageOperatorShow=false"
+            v-for="(previewPicture, index) in form.previewPictures"
+            :key="index">
+            <el-image
+              style="height:60px;width: 80px;margin-right: 10px;"
+              fit="fill"
+              :src="previewPicture"
+              :preview-src-list="[previewPicture]"></el-image>
+            <div align="center" id="'mask_'+index">
+             <el-link type="primary" icon="el-icon-delete" @click="removePreviewPicture(index)" style="font-size: 12px;">删除</el-link>
+            </div>
+          </article>
+        </div>
+        <MyUeditor
+          editorId="picUrlId+index"
+          :config="picUrlConfig"
+          editorType="image"
+          allowUploadPictureNumber="8"
+          @uploadPicUrl="uploadPrePicUrl"
+        />
       </el-form-item>
       <el-form-item label="优先级" prop="orderNum" align="left">
         <el-select-orderNum v-model.number="form.orderNum" :orderNumOptions="orderNumOptions"></el-select-orderNum>
@@ -96,6 +121,7 @@
             return {
                 dialogFormVisible: false,
                 loading:false,
+                imageOperatorShow:false,
                /* config: {
                     //serverUrl:this.myVariable.ueditorServerUrl+";jsessionid="+sessionStorage.getItem("JSESSIONID")+"?"
                     serverUrl:this.$store.getters.ueditorServerUrlWithCredentials//必须手动将值传过去，因为uedidot.config.js中保存的地址只会读取一次
@@ -110,10 +136,12 @@
                 },
                 ueditorLoading1:true,
                 ueditorLoading2:true,
-                form: {},
+                form: {
+                    previewPictures: [],
+                },
                 rules: {
                     productTypeId: [
-                        { required: true, message: '不能为空', trigger: 'blur' }
+                        { required: true, message: '不能为空'}
                     ],
                     name: [
                         { required: true, message: '不能为空', trigger: 'blur' },
@@ -158,17 +186,32 @@
 
             },
             closed(){
+                this.initForm();
                 this.$refs['form'].resetFields();//重置表单
                 this.$refs.contentUeditor.setContent("");//清空富文本的值
-            },
-            onchangeLoaddingOfImage(value){
-                this.ueditorLoading1=value;
             },
             onchangeLoaddingOfContent(value){
                 this.ueditorLoading2=value;
             },
             uploadPicUrl(picUrl){//当点击图片上传时调用，获取ueditor图片上传组件调用图片的地址
                 this.$set(this.form,'picUrl',picUrl);
+                if(this.form.previewPictures.length==0){//如果预览图还没有图片，则为预览图添加一张图片
+                    this.form.previewPictures.push(picUrl);
+                }
+            },
+            onchangeLoaddingOfImage(value){
+                this.ueditorLoading1=value;
+            },
+            uploadPrePicUrl(picUrlArray){//用于预览图上传，批量上传
+                const array=picUrlArray.split(",");//将组件传递过来的字符串重新转为数组
+                if(this.form.previewPictures.length+array.length>8){
+                    this.$message.error("预览图不能超过8张");
+                }else{
+                    this.form.previewPictures=this.form.previewPictures.concat(array);//连接数组
+                }
+            },
+            removePreviewPicture(index){//移除某个图片
+                this.form.previewPictures.splice(index,1);
             },
             initForm(){//初始化表单元素
                 this.$set(this.form,'productTypeId',null);
@@ -183,6 +226,7 @@
                 this.$set(this.form,'onSale','true');
                 this.$set(this.form,'description','');
                 this.$set(this.form,'content','');
+                this.form.previewPictures.splice(0,this.form.previewPictures.length);//清空之前上传的预览图列表。
             },
             submitForm(formName) {//提交表单事件
                 this.$refs[formName].validate((valid) => {
@@ -220,6 +264,30 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+#picturePreViewsDiv{
+  display: -webkit-flex;
+  display: flex;
+}
+.picturePreView{
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+}
+.imageOperatorMask{
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.7);
+  height: 40px;
+  width: 60px;
+  /*透明度为0，则就是不可见*/
+  opacity: 0;
+}
+.imageOperatorMask:hover{
+  opacity: 1;
+}
 
 </style>

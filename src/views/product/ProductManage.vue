@@ -31,7 +31,6 @@
           </el-table-column>-->
         <el-table-column
           width="80"
-          prop="picUrl"
           align="center"
           label="产品图片">
           <template  slot-scope="scope">
@@ -69,6 +68,14 @@
           label="优先级">
           <template  slot-scope="scope">
             {{orderNumOptions[scope.row.orderNum]}}
+          </template>
+        </el-table-column>
+        <el-table-column
+          width="60"
+          align="center"
+          label="预览图">
+          <template  slot-scope="scope">
+           {{scope.row.previewPictures.length}}
           </template>
         </el-table-column>
         <el-table-column

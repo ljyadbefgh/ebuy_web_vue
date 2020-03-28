@@ -78,7 +78,7 @@
                             msg.data.forEach(item => {
                                 names.push(item.name);
                             })
-                            this.drawLine("产品各栏目销售额比重",names,msg.data);
+                            this.drawLine("各产品栏目销售额比重",names,msg.data);
                         }
                     });
             }

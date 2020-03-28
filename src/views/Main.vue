@@ -42,6 +42,15 @@
       </el-col>
     </el-row>
 
+    <el-row :gutter="20" style="margin-top: 20px;">
+      <el-col :span="14">
+        <ProductMaxClickChart/>
+      </el-col>
+      <el-col :span="10">
+        <ProductTypeClickChart/>
+      </el-col>
+    </el-row>
+
     <el-row style="margin-top: 20px;">
       <el-col :span="24">
         <ProductTypeSalesVolumeOfRecentlyEveryDayChart/>
@@ -65,7 +74,9 @@
             ProductMaxSaleChart: () => import("@/views/main/ProductMaxSaleChart.vue"), //引入产品最大销售额图表
             ProductTypeSaleChart: () => import("@/views/main/ProductTypeSaleChart.vue"), //引入产品最大销售额图表
             ProductTypeSalesVolumeOfRecentlyEveryDayChart: () => import("@/views/main/ProductTypeSalesVolumeOfRecentlyEveryDayChart.vue"), //引入产品订单图表
-            ProductTypeSaleVolumeChart: () => import("@/views/main/ProductTypeSaleVolumeChart.vue") //引入各类型产品销售图表
+            ProductTypeSaleVolumeChart: () => import("@/views/main/ProductTypeSaleVolumeChart.vue"), //引入各类型产品销售图表
+            ProductMaxClickChart: () => import("@/views/main/ProductMaxClickChart.vue"), //引入产品关注度排行图表
+            ProductTypeClickChart: () => import("@/views/main/ProductTypeClickChart.vue") //引入产品栏目关注度排行图表
         },
         data() {
             return {

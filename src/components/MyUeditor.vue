@@ -66,6 +66,11 @@
                     return {};
                 }
             },
+            allowUploadPictureNumber:{ // 一次允许上传的最大图片数量，默认是一个，只对图片插件使用（富文本不受限制）
+                default () {
+                    return 1;
+                }
+            },
             value: {//获取从父组件传递过来的富文本的内容
                 type: String,
                 default () {
@@ -124,10 +129,24 @@
                         _this.ueditor.addListener('beforeInsertImage',function(t, arg){//监听插入图片动作，回调函数
                             //alert(arg[0].src);//arg就是上传图片的返回值，是个数组，如果上传多张图片，请遍历该值。
                             //把图片地址赋值给页面input
-                            if(arg.length>1){
-                                _this.$message.error("只能选一张图片上传");
+                            if(_this.allowUploadPictureNumber==1){//如果默认是1
+                                if(arg.length>1){
+                                    _this.$message.error("只能选一张图片上传");
+                                }else{
+                                    _this.$emit('uploadPicUrl',arg[0].src);//调用父组件的方法，将插入图片的值赋给父组件。arg[0].src表示第一张图片
+                                }
+                            }else if(_this.allowUploadPictureNumber>1){//如果是多图上传
+                                if(arg.length>_this.allowUploadPictureNumber){
+                                    _this.$message.error("最多只能上传"+_this.allowUploadPictureNumber+"张图片上传");
+                                }else{
+                                    let array=new Array();
+                                    for(let i=0;i<arg.length;i++){
+                                        array.push(arg[i].src);//将地址传入
+                                    }
+                                    _this.$emit('uploadPicUrl',array.toString());//调用父组件的方法，将插入图片的值赋给父组件。传递数组对象
+                                }
                             }else{
-                                _this.$emit('uploadPicUrl',arg[0].src);//调用父组件的方法，将插入图片的值赋给父组件。arg[0].src表示第一张图片
+                                _this.$message.error("ueditor配置参数错误");
                             }
                         });
                     });

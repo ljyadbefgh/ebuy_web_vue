@@ -1,6 +1,14 @@
 <template>
   <div>
     <el-form :model="form" :rules="rules"  ref="form" label-width="300px">
+      <el-divider content-position="center">网站设置</el-divider>
+      <el-form-item label="网站运维中"  prop="maintenance">
+        <el-switch v-model="form.maintenance"></el-switch>
+      </el-form-item>
+      <el-form-item v-show="form.maintenance" label="网站运维时提示的信息"  prop="productClickInterval">
+        <el-input v-model.number="form.maintenanceContent" placeholder="网站运维时提示的信息"></el-input>
+      </el-form-item>
+
       <el-divider content-position="center">管理员模块设置</el-divider>
       <el-form-item label="允许管理员一天内连续输入错误密码次数"  prop="maxLoginErrorNumberOfAdmin" align="left">
         <el-input v-model.number="form.maxLoginErrorNumberOfAdmin" placeholder="0表示不限制登陆次数"></el-input>
@@ -18,6 +26,11 @@
       </el-form-item>
       <el-form-item label="允许客户一天内连续输入错误密码次数"  prop="maxLoginErrorNumberOfCustomer" align="left">
         <el-input v-model.number="form.maxLoginErrorNumberOfCustomer" placeholder="0表示不限制登陆次数"></el-input>
+      </el-form-item>
+
+      <el-divider content-position="center">产品模块设置</el-divider>
+      <el-form-item label="产品点击日志记录的间隔时间"  prop="productClickInterval" align="left">
+        <el-input v-model.number="form.productClickInterval" placeholder="同一IP访问，产品至少间隔多少秒记录一次点击数。，0表示不限制，单位为秒"></el-input>
       </el-form-item>
 
       <el-divider content-position="center">购物模块设置</el-divider>
@@ -67,7 +80,11 @@
                     maxProductOrderNumberInToday: [
                         { required: true, message: '不能为空', trigger: 'blur' },
                         { type: 'number', message: '必须为数字值'}
-                    ]
+                    ],
+                    productClickInterval: [
+                      { required: true, message: '不能为空', trigger: 'blur' },
+                      { type: 'number', message: '必须为数字值'}
+                  ],
                 }
             }
 

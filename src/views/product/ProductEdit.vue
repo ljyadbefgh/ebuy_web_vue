@@ -16,8 +16,33 @@
           @onChangeLoading="onchangeLoaddingOfImage"
           editorType="image"
           @uploadPicUrl="uploadPicUrl"
-        >
-        </MyUeditor>
+        />
+      </el-form-item>
+      <el-form-item label="预览图">
+        <div id="picturePreViewsDiv">
+          <article
+            class="picturePreView"
+            @mouseover="imageOperatorShow=true"
+            @mouseout="imageOperatorShow=false"
+            v-for="(previewPicture, index) in form.previewPictures"
+            :key="index">
+            <el-image
+              style="height:60px;width: 80px;margin-right: 10px;"
+              fit="fill"
+              :src="previewPicture"
+              :preview-src-list="[previewPicture]"></el-image>
+            <div align="center" id="'mask_'+index">
+              <el-link type="primary" icon="el-icon-delete" @click="removePreviewPicture(index)" style="font-size: 12px;">删除</el-link>
+            </div>
+          </article>
+        </div>
+        <MyUeditor
+          editorId="picUrlId+index"
+          :config="picUrlConfig"
+          editorType="image"
+          allowUploadPictureNumber="8"
+          @uploadPicUrl="uploadPrePicUrl"
+        />
       </el-form-item>
       <el-form-item label="优先级" prop="orderNum" align="left">
         <el-select-orderNum v-model.number="form.orderNum" :orderNumOptions="orderNumOptions"></el-select-orderNum>
@@ -111,6 +136,7 @@
                 ueditorLoading1:true,
                 ueditorLoading2:true,
                 form: {// 这里必须初始化所有属性，否则后面用form=msg.data，因为form地址的变化，会导致产品栏目下拉框无法监听
+                    previewPictures: [],
                     productTypeId:null,
                     name: '',
                     picUrl:'',
@@ -126,7 +152,7 @@
                 },
                 rules: {
                     productTypeId: [
-                        { required: true, message: '不能为空', trigger: 'blur' }
+                        { required: true, message: '不能为空'}
                     ],
                     name: [
                         { required: true, message: '不能为空', trigger: 'blur' },
@@ -195,6 +221,18 @@
             uploadPicUrl(picUrl){//当点击图片上传时调用，获取ueditor图片上传组件调用图片的地址
                 this.form.picUrl=picUrl;
             },
+            uploadPrePicUrl(picUrlArray){//用于预览图上传，批量上传
+                const array=picUrlArray.split(",");//将组件传递过来的字符串重新转为数组
+                if(this.form.previewPictures.length+array.length>8){
+                    this.$message.error("预览图不能超过8张");
+                }else{
+                    this.form.previewPictures=this.form.previewPictures.concat(array);//连接数组
+                }
+
+            },
+            removePreviewPicture(index){//移除某个图片
+                this.form.previewPictures.splice(index,1);
+            },
             submitForm(formName) {//提交表单事件
                 this.$refs[formName].validate((valid) => {
                     if (valid) {//如果验证通过
@@ -227,5 +265,29 @@
 </script>
 
 <style scoped>
-
+  #picturePreViewsDiv{
+    display: -webkit-flex;
+    display: flex;
+    overflow-x: auto;
+  }
+  .picturePreView{
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+  }
+  .imageOperatorMask{
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.7);
+    height: 40px;
+    width: 60px;
+  /*//透明度为0，则就是不可见*/
+  opacity: 0;
+  }
+  .imageOperatorMask:hover{
+    opacity: 1;
+  }
 </style>

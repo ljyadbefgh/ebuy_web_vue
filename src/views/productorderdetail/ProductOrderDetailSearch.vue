@@ -47,7 +47,7 @@
     export default {
         name: "ProductOrderDetailSearch",
         components: {
-            'el-select-product': () => import("@/views/productorderdetail/el-select-product.vue"), //引入客户下拉框组件
+            'el-select-product': () => import("@/components/el-select-product.vue"), //引入产品下拉框组件
             'el-date-picker-between': () => import("@/components/el-date-picker-between.vue") //引入自定义日期插件（含两个日期）
         },
         props:{

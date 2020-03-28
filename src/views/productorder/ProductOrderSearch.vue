@@ -77,7 +77,7 @@
     export default {
         name: "ProductOrderSearch",
         components: {
-            'el-select-customer': () => import("@/views/productorder/el-select-customer.vue"), //引入客户下拉框组件
+            'el-select-customer': () => import("@/components/el-select-customer.vue"), //引入客户下拉框组件
             'el-date-picker-between': () => import("@/components/el-date-picker-between.vue") //引入自定义日期插件（含两个日期）
         },
         props:{
